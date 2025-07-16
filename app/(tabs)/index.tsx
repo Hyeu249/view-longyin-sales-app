@@ -1,14 +1,27 @@
-import { StyleSheet } from 'react-native';
+import { useEffect } from "react";
+import { StyleSheet } from "react-native";
+import { Text, View } from "@/components/Themed";
+import { Stack, useNavigation } from "expo-router";
+import { useColorScheme } from "@/components/useColorScheme";
+import Colors from "@/constants/Colors";
 
-import EditScreenInfo from '@/components/EditScreenInfo';
-import { Text, View } from '@/components/Themed';
+export default function Component() {
+  const navigation = useNavigation();
+  const colorScheme = useColorScheme();
 
-export default function TabOneScreen() {
+  useEffect(() => {
+    navigation.setOptions({
+      headerShadowVisible: false,
+      headerStyle: {
+        backgroundColor: Colors[colorScheme ?? "light"].tint,
+        height: 40,
+      },
+      headerTintColor: "#fff",
+    });
+  }, [navigation]);
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab One</Text>
-      <View style={styles.separator} lightColor="#eee" darkColor="rgba(255,255,255,0.1)" />
-      <EditScreenInfo path="app/(tabs)/index.tsx" />
+      <Text style={styles.title}>Tab Two</Text>
     </View>
   );
 }
@@ -16,16 +29,16 @@ export default function TabOneScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   title: {
     fontSize: 20,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   separator: {
     marginVertical: 30,
     height: 1,
-    width: '80%',
+    width: "80%",
   },
 });
