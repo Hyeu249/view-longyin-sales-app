@@ -22,7 +22,7 @@ export default function MiddleButton() {
     bottomSheetRef.current?.close();
   };
 
-  type DocPath = "/Invoices" | "/Reports";
+  type DocPath = "/MaterialRequest" | "/Reports";
 
   const moveTo = (path: DocPath) => {
     if (!path) return;
@@ -33,7 +33,7 @@ export default function MiddleButton() {
   const data = [
     {
       label: "Material Request",
-      onClick: () => moveTo("/Invoices"),
+      onClick: () => moveTo("/MaterialRequest"),
     },
     { label: "Stock Entry", onClick: () => {} },
     { label: "Sales Order", onClick: () => {} },

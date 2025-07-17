@@ -63,7 +63,6 @@ function RootLayoutNav() {
             headerLeft: () => (
               <Pressable
                 onPress={() => {
-                  console.log("Back pressed!");
                   router.back();
                 }}
               >
@@ -77,6 +76,7 @@ function RootLayoutNav() {
         >
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: "modal" }} />
+          <Stack.Screen name="MaterialRequest/index" />
         </Stack>
       </ThemeProvider>
     </PaperProvider>

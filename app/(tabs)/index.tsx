@@ -4,6 +4,8 @@ import { Text, View } from "@/components/Themed";
 import { Stack, useNavigation } from "expo-router";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
+import QuickAccess from "@/components/QuickAccess";
+import RecentRecords from "@/components/RecentRecords";
 
 export default function Component() {
   const navigation = useNavigation();
@@ -14,14 +16,14 @@ export default function Component() {
       headerShadowVisible: false,
       headerStyle: {
         backgroundColor: Colors[colorScheme ?? "light"].tint,
-        height: 40,
       },
       headerTintColor: "#fff",
     });
   }, [navigation]);
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Tab Two</Text>
+      <QuickAccess />
+      <RecentRecords />
     </View>
   );
 }
@@ -29,8 +31,7 @@ export default function Component() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
+    padding: 10,
   },
   title: {
     fontSize: 20,
