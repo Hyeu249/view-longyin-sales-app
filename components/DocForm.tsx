@@ -9,7 +9,6 @@ import { useColorScheme } from "@/components/useColorScheme";
 import Dropdown from "@/components/DropDown";
 
 const data = [
-  { label: "", value: "EMPTY" },
   { label: "Apple 🍎", value: "apple" },
   { label: "Banana 🍌", value: "banana" },
   { label: "Orange 🍊", value: "orange" },
@@ -24,7 +23,7 @@ export default function DocForm() {
     reset,
     formState: { errors, isSubmitted },
   } = useForm({
-    defaultValues: { user_name: "", product_type: "EMPTY" },
+    defaultValues: { user_name: "", product_type: "" },
   });
 
   const onSubmit = (data: any) => {
