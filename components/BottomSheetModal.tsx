@@ -20,10 +20,11 @@ export type BottomSheetHandle = {
 type Props = {
   children: ReactNode;
   snapPoints?: (string | number)[];
+  onDismiss?: () => void;
 };
 
 const CustomBottomSheet = forwardRef<BottomSheetHandle, Props>(
-  ({ children, snapPoints = ["50%"] }, ref) => {
+  ({ children, snapPoints = ["25%"], onDismiss }, ref) => {
     const bottomSheetRef = useRef<BottomSheet>(null);
 
     useImperativeHandle(ref, () => ({
@@ -49,12 +50,19 @@ const CustomBottomSheet = forwardRef<BottomSheetHandle, Props>(
           snapPoints={snapPoints}
           enablePanDownToClose
           backdropComponent={renderBackdrop} // 👈 phần này nè!
+          onChange={(index) => {
+            if (index === -1 && typeof onDismiss === "function") {
+              onDismiss(); // 👈 gọi callback khi sheet đóng
+            }
+          }}
         >
           <BottomSheetView
             style={{
+              width: "100%",
               flex: 1,
               backgroundColor: "white",
               padding: 20,
+              paddingTop: 0,
               alignItems: "center",
               justifyContent: "center",
             }}

@@ -13,22 +13,22 @@ export default function Component<T extends Record<string, any>>({
   onView,
   onDelete,
 }: Props<T>) {
-  const entries = Object.entries(value);
-
-  const nameEntry = entries.find(([key]) => key === "name");
-  const otherEntries = entries.filter(([key]) => key !== "name");
+  const entries = Object.entries(value).filter(
+    ([key]) => !["name", "local_id"].includes(key)
+  );
+  const [first, ...rest] = entries;
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={{ fontSize: 16, fontWeight: "600", color: "darkcyan" }}>
-          {nameEntry ? nameEntry[1] : "No name"}
+          {first ? first[1] : "No name"}
         </Text>
       </View>
 
       <View style={styles.bodyInfo}>
         <View style={styles.transparent}>
-          {otherEntries.map(([key, val], index) => (
+          {rest.map(([key, val], index) => (
             <View style={styles.transparentRow} key={index}>
               <Text style={styles.fieldName}>{key}</Text>
               <Text style={styles.value}>{String(val)}</Text>

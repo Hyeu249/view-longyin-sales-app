@@ -1,39 +1,33 @@
-import React, { useCallback, useState, useEffect } from "react";
+import React from "react";
 import { ScrollView, StyleSheet } from "react-native";
-import { TextInput, Button, HelperText, Card } from "react-native-paper";
-import { useForm, Controller, FieldError } from "react-hook-form";
+import { TextInput, HelperText, Card } from "react-native-paper";
+import { Controller, FieldError, FieldErrors, Control } from "react-hook-form";
 import Wrapper from "@/components/Wrapper";
 import { Text, View } from "@/components/Themed";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import Dropdown from "@/components/DropDown";
 import DataTable from "@/components/DataTable";
+import BottomButtons from "@/components/BottomButtons";
+import { MainField } from "@/utils/type";
+import LinkSelection from "@/components/LinkSelection";
 
-const data = [
-  { label: "Apple 🍎", value: "apple" },
-  { label: "Banana 🍌", value: "banana" },
-  { label: "Orange 🍊", value: "orange" },
-];
+type Props = {
+  fields: MainField[];
+  onCancel: () => void;
+  onSave: () => void;
+  control: Control<any>;
+  errors: FieldErrors;
+};
 
-export default function DocForm() {
+export default function DocForm({
+  fields,
+  onCancel,
+  onSave,
+  control,
+  errors,
+}: Props) {
   const colorScheme = useColorScheme();
-
-  const {
-    control,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitted },
-  } = useForm({
-    defaultValues: {
-      user_name: "",
-      product_type: "",
-      items: [],
-    },
-  });
-
-  const onSubmit = (data: any) => {
-    console.log("data: ", data);
-  };
 
   return (
     <Wrapper>
@@ -46,103 +40,173 @@ export default function DocForm() {
           }}
         >
           <View>
-            <Controller
-              control={control}
-              rules={{
-                required: "Vui lòng nhập email",
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <TextInput
-                  label="First name"
-                  error={!!errors.user_name}
-                  mode="outlined"
-                  onBlur={onBlur}
-                  onChangeText={onChange}
-                  value={value}
-                  dense={true}
-                  theme={{
-                    colors: {
-                      primary: Colors[colorScheme ?? "light"].tint, // Màu khi focus
-                    },
-                  }}
-                />
-              )}
-              name="user_name"
-            />
-            <HelperText type="error" visible={!!errors.user_name}>
-              {errors?.user_name?.message}
-            </HelperText>
-
-            <Controller
-              control={control}
-              name="product_type"
-              rules={{
-                validate: (value) =>
-                  value !== "EMPTY" || "Vui lòng nhập loại sản phẩm",
-              }}
-              render={({ field: { onChange, onBlur, value } }) => {
+            {fields.map((d_field, index) => {
+              if (d_field.type === "child_table") {
                 return (
-                  <Dropdown
-                    label="Product type"
-                    options={data}
-                    value={value}
-                    onChange={onChange}
-                    error={!!errors.product_type}
-                  />
+                  <View key={index}>
+                    <Controller
+                      name={d_field.field_name}
+                      control={control}
+                      rules={
+                        d_field.required
+                          ? { required: `${d_field.label} là bắt buộc` }
+                          : undefined
+                      }
+                      render={({ field: { onChange, value } }) => (
+                        <DataTable
+                          fields={d_field.child_fields || []}
+                          label={d_field.label}
+                          value={value}
+                          onChange={onChange}
+                          error={!!errors[d_field.field_name]}
+                        />
+                      )}
+                    />
+                    <HelperText type="error">
+                      {(errors[d_field.field_name] as FieldError)?.message ??
+                        ""}
+                    </HelperText>
+                  </View>
                 );
-              }}
-            />
-            <HelperText type="error" visible={!!errors.product_type}>
-              {errors?.product_type?.message}
-            </HelperText>
+              } else if (d_field.type === "link") {
+                return (
+                  <View key={index}>
+                    <Controller
+                      name={d_field.field_name}
+                      control={control}
+                      rules={
+                        d_field.required
+                          ? { required: `${d_field.label} là bắt buộc` }
+                          : undefined
+                      }
+                      render={({ field: { onChange, value } }) => {
+                        return (
+                          <LinkSelection
+                            label={d_field.label}
+                            doctype={d_field.doctype || ""}
+                            value={value}
+                            onChange={onChange}
+                            error={!!errors[d_field.field_name]}
+                          />
+                        );
+                      }}
+                    />
+                    <HelperText type="error">
+                      {(errors[d_field.field_name] as FieldError)?.message ??
+                        ""}
+                    </HelperText>
+                  </View>
+                );
+              } else if (d_field.type === "select") {
+                return (
+                  <View key={index}>
+                    <Controller
+                      name={d_field.field_name}
+                      control={control}
+                      rules={
+                        d_field.required
+                          ? { required: `${d_field.label} là bắt buộc` }
+                          : undefined
+                      }
+                      render={({ field: { onChange, value } }) => {
+                        return (
+                          <Dropdown
+                            label={d_field.label}
+                            options={d_field.options || []}
+                            value={value}
+                            onChange={onChange}
+                            error={!!errors[d_field.field_name]}
+                          />
+                        );
+                      }}
+                    />
+                    <HelperText type="error">
+                      {(errors[d_field.field_name] as FieldError)?.message ??
+                        ""}
+                    </HelperText>
+                  </View>
+                );
+              } else if (d_field.type === "char") {
+                return (
+                  <View key={index}>
+                    <Controller
+                      name={d_field.field_name}
+                      control={control}
+                      rules={
+                        d_field.required
+                          ? { required: `${d_field.label} là bắt buộc` }
+                          : undefined
+                      }
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                          label={d_field.label}
+                          error={!!errors[d_field.field_name]}
+                          mode="outlined"
+                          onBlur={onBlur}
+                          onChangeText={onChange}
+                          value={value}
+                          dense={true}
+                          theme={{
+                            colors: {
+                              primary: Colors[colorScheme ?? "light"].tint, // Màu khi focus
+                            },
+                          }}
+                        />
+                      )}
+                    />
+                    <HelperText type="error">
+                      {(errors[d_field.field_name] as FieldError)?.message ??
+                        ""}
+                    </HelperText>
+                  </View>
+                );
+              } else if (d_field.type === "int") {
+                return (
+                  <>
+                    <Controller
+                      name={d_field.field_name}
+                      control={control}
+                      rules={
+                        d_field.required
+                          ? { required: `${d_field.label} là bắt buộc` }
+                          : undefined
+                      }
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                          label={d_field.label}
+                          error={!!errors[d_field.field_name]}
+                          mode="outlined"
+                          onBlur={onBlur}
+                          onChangeText={(text) => {
+                            const numeric = text.replace(/[^0-9]/g, "");
+                            onChange(numeric ? parseInt(numeric) : "");
+                          }}
+                          value={String(value)}
+                          dense={true}
+                          keyboardType={"numeric"}
+                          theme={{
+                            colors: {
+                              primary: Colors[colorScheme ?? "light"].tint, // Màu khi focus
+                            },
+                          }}
+                        />
+                      )}
+                    />
+                    <HelperText type="error">
+                      {(errors[d_field.field_name] as FieldError)?.message ??
+                        ""}
+                    </HelperText>
+                  </>
+                );
+              }
+            })}
+          </View>
 
-            <Controller
-              control={control}
-              rules={{
-                required: "Vui lòng nhập email",
-              }}
-              render={({ field: { onChange, value } }) => (
-                <DataTable
-                  label="Item"
-                  data={[]}
-                  value={value}
-                  onChange={onChange}
-                  error={!!errors.items}
-                />
-              )}
-              name="items"
-            />
-            <HelperText type="error" visible={!!errors.items}>
-              {errors?.items?.message}
-            </HelperText>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              gap: 10,
-              paddingBottom: 10,
-            }}
-          >
-            <Button
-              mode="contained"
-              onPress={handleSubmit(onSubmit)}
-              style={[styles.button, { backgroundColor: "#00000014" }]}
-            >
-              <Text style={{ fontWeight: 600 }}>Cancel</Text>
-            </Button>
-            <Button
-              mode="contained"
-              onPress={handleSubmit(onSubmit)}
-              style={[
-                styles.button,
-                { backgroundColor: Colors[colorScheme ?? "light"].tint },
-              ]}
-            >
-              <Text style={{ fontWeight: 600, color: "white" }}>
-                Save Changes
-              </Text>
-            </Button>
-          </View>
+          <BottomButtons
+            onCancel={onCancel}
+            onSave={onSave}
+            paddingBottom={10}
+          />
         </View>
       </ScrollView>
     </Wrapper>

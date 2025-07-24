@@ -130,7 +130,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: "600",
-    marginBottom: 12,
     textAlign: "center",
   },
   container: {

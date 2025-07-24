@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { StyleSheet } from "react-native";
-import { Text, View } from "@/components/Themed";
-import { Stack, useNavigation } from "expo-router";
+import { useNavigation } from "expo-router";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
-import DocForm from "@/components/DocForm";
 import { TabView, TabBar } from "react-native-tab-view";
 import { Dimensions } from "react-native";
+import StockEntryTab from "./StockEntryTab";
+import FormTab from "./FormTab";
+import { useForm } from "react-hook-form";
+import { MaterialRequest } from "./types";
 
 export default function Component() {
   const navigation = useNavigation();
@@ -19,12 +21,51 @@ export default function Component() {
     { key: "second", title: "Stock Entry" },
   ]);
 
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitted },
+  } = useForm<MaterialRequest>({
+    defaultValues: {
+      name: "",
+      s_warehouse: "",
+      t_warehouse: "",
+      items: [
+        {
+          name: "ag2425",
+          item_code: "apple",
+          qty: 60,
+          rate: 250000,
+        },
+        {
+          name: "gs522",
+          item_code: "banana",
+          qty: 65,
+          rate: 200000,
+        },
+      ],
+    },
+  });
+
   const renderScene = ({ route }: any) => {
     switch (route.key) {
       case "first":
-        return <DocForm />;
+        return (
+          <FormTab
+            control={control}
+            handleSubmit={handleSubmit}
+            errors={errors}
+          />
+        );
       case "second":
-        return <></>;
+        return (
+          <StockEntryTab
+            control={control}
+            handleSubmit={handleSubmit}
+            errors={errors}
+          />
+        );
       default:
         return null;
     }
@@ -41,11 +82,6 @@ export default function Component() {
     });
   }, [navigation]);
 
-  // return (
-  //   <View style={styles.container}>
-  //     <DocForm />
-  //   </View>
-  // );
   return (
     <TabView
       navigationState={{ index, routes }}
