@@ -34,6 +34,10 @@ export default function Component({
   onChange,
   error,
 }: Props) {
+  const totalRate = value.reduce((sum, item) => {
+    return sum + (item.qty || 0) * (item.rate || 0);
+  }, 0);
+
   const colorScheme = useColorScheme();
 
   const bottomSheetRef = useRef<BottomSheetHandle>(null);
@@ -93,7 +97,7 @@ export default function Component({
           />
         ))}
 
-        <Footer price={100000} />
+        <Footer price={totalRate} />
       </View>
 
       <BottomSheetModel ref={bottomSheetRef} onDismiss={resetItems}>
@@ -256,6 +260,7 @@ function Header({ label, rightButton }: Header) {
 }
 
 function Footer({ price }: Footer) {
+  if (!price) return <></>;
   // render total price, space between, total:     100.000vnd
   return (
     <View style={styles.footer}>
