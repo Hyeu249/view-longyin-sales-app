@@ -31,8 +31,14 @@ export type Record = {
   onClick: () => void;
 };
 
-const STATUS_OPTIONS = ["All", "Approved", "Pending", "Rejected"] as const;
-type StatusFilter = (typeof STATUS_OPTIONS)[number];
+const STATUS_OPTIONS = [
+  { label: "All", value: "All" },
+  { label: "Approved", value: 1 },
+  { label: "Pending", value: 0 },
+  { label: "Rejected", value: 2 },
+] as const;
+
+type StatusFilter = "All" | 0 | 1 | 2;
 const DOCTYPE = "Stock Entry";
 
 const options = [
@@ -134,7 +140,7 @@ export default function Component() {
           const allowType = transaction_type
             ? item.transaction_type === transaction_type
             : true;
-          return item.status === statusFilter && allowOwner && allowType;
+          return item.docstatus === statusFilter && allowOwner && allowType;
         })
       );
     }
@@ -167,22 +173,22 @@ export default function Component() {
       <View style={styles.filterRow}>
         {STATUS_OPTIONS.map((option) => (
           <TouchableOpacity
-            key={option}
-            onPress={() => setStatusFilter(option)}
+            key={option.value}
+            onPress={() => setStatusFilter(option.value)}
             style={[
               styles.filterButton,
-              statusFilter === option && {
+              statusFilter === option.value && {
                 backgroundColor: Colors[colorScheme ?? "light"].tint,
               },
             ]}
           >
             <Text
               style={{
-                color: statusFilter === option ? "white" : "#333",
+                color: statusFilter === option.value ? "white" : "#333",
                 fontWeight: "600",
               }}
             >
-              {option}
+              {option.label}
             </Text>
           </TouchableOpacity>
         ))}
