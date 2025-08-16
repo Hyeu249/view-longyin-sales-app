@@ -8,6 +8,7 @@ export type Product = {
   price: number;
   image: string | undefined;
   qty: number;
+  stock?: number;
 };
 
 type Customer = {
@@ -22,7 +23,9 @@ type SalesPerson = {
 
 type SalesOrderContextType = {
   products: Product[]; // danh sách sản phẩm
-  setProducts: (p: Product[]) => void;
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+  rc_products: Product[]; // danh sách sản phẩm
+  setRCProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   customer: Customer; // danh sách sản phẩm
   setCustomer: (c: Customer) => void;
   salesPerson: SalesPerson; // danh sách sản phẩm
@@ -30,9 +33,9 @@ type SalesOrderContextType = {
   note: string; // danh sách sản phẩm
   setNote: (c: string) => void;
 
-  increaseProduct: (name: string) => void;
-  decreaseProduct: (name: string) => void;
-  removeProduct: (name: string) => void;
+  increaseProduct: (product: Product, name: string) => Product;
+  increaseRCProduct: (product: Product, name: string) => Product;
+  decreaseProduct: (product: Product, name: string) => Product;
 };
 
 // Tạo Context
@@ -43,33 +46,32 @@ const SalesOrderContext = createContext<SalesOrderContextType | undefined>(
 // Provider
 export const SalesOrderProvider = ({ children }: { children: ReactNode }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [rc_products, setRCProducts] = useState<Product[]>([]);
   const [customer, setCustomer] = useState<Customer>({});
   const [salesPerson, setSalesPerson] = useState<SalesPerson>({});
   const [note, setNote] = useState<string>("");
 
-  const increaseProduct = (name: string) => {
-    setProducts((prev) =>
-      prev.map((p) => (p.name === name ? { ...p, qty: p.qty + 1 } : p))
-    );
+  const increaseProduct = (p: Product, name: string) => {
+    const stock = p?.stock == undefined ? 0 : p.stock;
+    return p.name === name
+      ? { ...p, qty: p.qty < stock ? p.qty + 1 : p.qty }
+      : p;
   };
 
-  const decreaseProduct = (name: string) => {
-    setProducts((prev) =>
-      prev.map((p) =>
-        p.name === name && p.qty > 1 ? { ...p, qty: p.qty - 1 } : p
-      )
-    );
+  const increaseRCProduct = (p: Product, name: string) => {
+    return p.name === name ? { ...p, qty: p.qty + 1 } : p;
   };
 
-  const removeProduct = (name: string) => {
-    setProducts((prev) => prev.filter((item) => item.name !== name));
-  };
+  const decreaseProduct = (p: Product, name: string) =>
+    p.name === name && p.qty > 1 ? { ...p, qty: p.qty - 1 } : p;
 
   return (
     <SalesOrderContext.Provider
       value={{
         products,
         setProducts,
+        rc_products,
+        setRCProducts,
         customer,
         setCustomer,
         salesPerson,
@@ -78,8 +80,8 @@ export const SalesOrderProvider = ({ children }: { children: ReactNode }) => {
         setNote,
 
         increaseProduct,
+        increaseRCProduct,
         decreaseProduct,
-        removeProduct,
       }}
     >
       {children}

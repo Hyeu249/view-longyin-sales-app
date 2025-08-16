@@ -83,8 +83,12 @@ export default function FormTab({
       });
   }
 
-  const onSubmit = (data: PaymentEntry) => {
+  const onSubmit = (data: any) => {
     console.log("data: ", data);
+    const payInvoice = data.references?.[0];
+    if (payInvoice?.allocated_amount)
+      payInvoice.allocated_amount = data.paid_amount;
+
     if (id) {
       updateRecord(data); // update nếu có id
     } else {
@@ -133,6 +137,13 @@ export default function FormTab({
               field_name: "party",
               type: "char",
               required: true,
+            },
+            {
+              label: "Party Balance",
+              field_name: "party_balance",
+              type: "int",
+              default: 0,
+              readonly: true,
             },
             {
               label: "Paid amount",

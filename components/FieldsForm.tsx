@@ -38,7 +38,7 @@ export default function EditProfileScreen({
 }: Props) {
   const [modalVisible, setModalVisible] = useState(false);
   const [tempField, setTempField] = useState<BaseField>();
-  const [tempValue, setTempValue] = useState("");
+  const [tempValue, setTempValue] = useState<any>("");
   const [tempOnChange, setTempOnChange] = useState<(val: any) => void>();
   const colorScheme = useColorScheme();
 
@@ -198,9 +198,10 @@ export default function EditProfileScreen({
                               <ProfileItem
                                 label={d_field.label}
                                 value={String(value ?? "")}
-                                onPress={() =>
-                                  handleEditField(d_field, value, onChange)
-                                }
+                                onPress={() => {
+                                  if (d_field.readonly) return;
+                                  handleEditField(d_field, value, onChange);
+                                }}
                               />
                             );
                           }}
@@ -285,12 +286,16 @@ export default function EditProfileScreen({
                 mode="outlined"
                 keyboardType={"numeric"}
                 style={styles.input}
-                value={String(tempValue)}
+                value={
+                  tempValue
+                    ? new Intl.NumberFormat("vi-VN").format(Number(tempValue))
+                    : ""
+                }
                 onChangeText={(val) => {
                   const numeric = val.replace(/[^0-9]/g, "");
                   const newValue = numeric ? parseInt(numeric) : "";
 
-                  setTempValue(numeric);
+                  setTempValue(newValue);
                 }}
               />
             )}
@@ -347,12 +352,19 @@ function ProfileItem({
 }) {
   const sliceInt = 20;
   const sliceValue = value.slice(0, sliceInt);
+  let newValue;
+
+  if (value && Number.isInteger(Number(value))) {
+    newValue = new Intl.NumberFormat("vi-VN").format(Number(value));
+  } else {
+    newValue = value.length > sliceInt ? `${sliceValue}...` : value;
+  }
   return (
     <TouchableOpacity style={styles.itemRow} onPress={onPress}>
       <Text style={styles.label}>{label}</Text>
       <View style={styles.valueRow}>
         <Text style={styles.value} numberOfLines={1}>
-          {value.length > sliceInt ? `${sliceValue}...` : value}
+          {newValue}
         </Text>
         <Ionicons name="chevron-forward" size={16} color="#aaa" />
       </View>

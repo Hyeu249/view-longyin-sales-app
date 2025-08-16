@@ -16,6 +16,7 @@ import SalesSelector from "@/components/SalesSelector";
 import { useFrappe } from "@/context/FrappeContext";
 import OrderDetailSection from "@/components/OrderDetailSection";
 import OrderProductSection from "@/components/OrderProductSection";
+import ReceiveProductSection from "@/components/ReceiveProductSection";
 import TotalQuantitySection from "@/components/TotalQuantitySection";
 import SalesOrderFooter from "@/components/SalesOrderFooter";
 import { useSalesOrder } from "@/context/SalesOrderContext";
@@ -25,23 +26,25 @@ import SalesOrderRight from "@/components/SalesOrderRight";
 import HeaderShadow from "@/components/HeaderShadow";
 import SplashScreen from "@/components/SplashScreen";
 
-const getReceiptPurchases = async (call: any, id: string) => {
-  const response = await call.get("get_purchase_receipt", {
-    inter_company_reference: id,
-  });
-  const data = response?.message;
+const getPurchaseReceipt = async (
+  call: any,
+  id: string,
+  customer: string,
+  price_list: string
+) => {
+  try {
+    const response = await call.get("get_purchase_receipt", {
+      inter_company_reference: id,
+      customer: customer,
+      price_list: price_list,
+    });
+    const data = response?.message;
 
-  if (data.length)
-    return data.map((doc: any) => ({
-      name: doc.name,
-      posting_date: doc.posting_date,
-      docstatus: doc.docstatus,
-      total_qty: doc.total_qty,
-      total: doc.total,
-      items: doc.items,
-    }));
-
-  return [];
+    if (data.length) return data[0];
+    return {};
+  } catch (error) {
+    return {};
+  }
 };
 
 const getPayments = async (call: any, invoice_name: string) => {
@@ -127,33 +130,29 @@ export default function CreateOrderPage() {
     products,
     setProducts,
 
-    setCustomer,
+    rc_products,
+    setRCProducts,
 
-    salesPerson,
+    setCustomer,
     setSalesPerson,
 
     note,
     setNote,
-
-    increaseProduct,
-    decreaseProduct,
-    removeProduct,
   } = useSalesOrder();
 
   // New states
   const [deliveryNote, setDeliveryNote] = useState<any>({});
   const [invoice, setInvoice] = useState<any>({});
   const [payments, setPayments] = useState<any>([]);
-  const [receipts, setReceipts] = useState<any>([]);
+  const [purchaseReceipt, setPurchaseReceipt] = useState<any>({});
 
-  console.log("invoice: ", invoice);
+  console.log("purchaseReceipt: ", purchaseReceipt);
 
   const qtyTotal = products.reduce((s, p) => s + p.qty, 0);
   const total = products.reduce((s, p) => s + p.price * p.qty, 0);
-  const receive_qty = receipts.reduce(
-    (s: number, p: any) => s + (Number(p?.total_qty) || 0),
-    0
-  );
+  const receive_qty = rc_products.reduce((s, p) => s + p.qty, 0);
+  const rc_total = rc_products.reduce((s, p) => s + p.price * p.qty, 0);
+
   useEffect(() => {
     if (isCreate && userInfo.sales_person) {
       setSalesPerson({ name: userInfo.sales_person });
@@ -175,9 +174,6 @@ export default function CreateOrderPage() {
           if (payments.length > 0) setPayments(payments);
         }
         if (doc.name) {
-          const receipts = await getReceiptPurchases(call, id);
-          if (receipts.length) setReceipts(receipts);
-
           setDeliveryNote(doc);
           setCustomer({
             name: doc.customer,
@@ -197,8 +193,17 @@ export default function CreateOrderPage() {
           if (items.length > 0) setProducts(items);
 
           const sales_person = doc.sales_team?.[0]?.sales_person;
-
           if (sales_person) setSalesPerson({ name: sales_person });
+
+          const receipt = await getPurchaseReceipt(
+            call,
+            id,
+            doc.customer || "",
+            doc.selling_price_list || ""
+          );
+
+          if (receipt.doc?.name) setPurchaseReceipt(receipt.doc);
+          if (receipt.priced_items?.length) setRCProducts(receipt.priced_items);
         }
       } catch (error) {
         console.error(error);
@@ -223,17 +228,21 @@ export default function CreateOrderPage() {
           <SalesOrderRight
             id={id}
             docstatus={deliveryNote.docstatus}
+            isEdit={isEdit}
             setIsEdit={setIsEdit}
           />
         ),
       });
     }
-  }, [isCreate, deliveryNote.docstatus]);
+  }, [isCreate, deliveryNote.docstatus, isEdit]);
 
   useEffect(() => {
     return () => {
       setProducts([]);
+      setRCProducts([]);
       setCustomer({});
+      setSalesPerson({});
+      setNote("");
     };
   }, []);
 
@@ -261,24 +270,12 @@ export default function CreateOrderPage() {
 
           <OrderProductSection
             isEdit={isEdit}
-            products={products}
-            increaseProduct={(name) => increaseProduct(name)}
-            decreaseProduct={(name) => decreaseProduct(name)}
-            removeProduct={(name) => removeProduct(name)}
-            qr_code={() => {
-              db.setValue("Delivery Note", "MAT-DN-2025-00002", "items", [
-                {
-                  name: "",
-                  item_code: "Longyin_Vỏ Bình Gas 12kg-NO-CHIP",
-                  qty: 2,
-                  rate: 250000,
-                  serial_no: "",
-                  use_serial_batch_fields: 1,
-                },
-              ])
-                .then((doc) => console.log(doc))
-                .catch((error) => console.error(error));
-            }}
+            qr_code={() => console.log("QR")}
+          />
+
+          <ReceiveProductSection
+            isEdit={isEdit}
+            qr_code={() => console.log("QR")}
           />
 
           <Customer isEdit={isEdit} />
@@ -287,6 +284,7 @@ export default function CreateOrderPage() {
             qty={qtyTotal}
             total={total}
             receive_qty={receive_qty}
+            rc_total={rc_total}
           />
 
           {/* Thanh toán */}

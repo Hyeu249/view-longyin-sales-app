@@ -7,6 +7,7 @@ type Props = {
   qty: number;
   receive_qty: number;
   total: number;
+  rc_total: number;
 };
 const PRIMARY = "#0A84FF";
 
@@ -14,6 +15,7 @@ export default function TotalQuantitySection({
   qty,
   total,
   receive_qty,
+  rc_total,
 }: Props) {
   return (
     <View style={styles.sectionBox}>
@@ -36,7 +38,7 @@ export default function TotalQuantitySection({
 
       <View style={styles.rowBetween}>
         <Text style={styles.label}>Tổng tiền hàng(thu)</Text>
-        <Text style={styles.value}>{formatVND(0)}</Text>
+        <Text style={styles.value}>{formatVND(rc_total)}</Text>
       </View>
 
       <TouchableOpacity style={styles.linkRow}>

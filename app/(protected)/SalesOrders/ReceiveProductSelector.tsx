@@ -25,8 +25,8 @@ export default function ChonSanPham() {
   const [search, setSearch] = useState("");
   const router = useRouter();
   const navigation = useNavigation();
-  const { call, userInfo } = useFrappe();
-  const { products, setProducts, customer } = useSalesOrder();
+  const { call, db, userInfo } = useFrappe();
+  const { rc_products, setRCProducts, customer } = useSalesOrder();
 
   const toggleSelection = (name: string) => {
     setSelected((prev) =>
@@ -53,11 +53,10 @@ export default function ChonSanPham() {
 
   useEffect(() => {
     const init = async () => {
-      const stock = await getStockItems(
-        call,
-        userInfo?.company,
-        userInfo?.warehouse
-      );
+      const stock = await db.getDocList("Item", {
+        fields: ["name", "item_code"],
+        limit: 10000,
+      });
       const data = await Promise.all(
         stock.map(async (res: any) => {
           try {
@@ -83,7 +82,6 @@ export default function ChonSanPham() {
               stock_uom: docs.message.stock_uom,
               image: docs.message.image,
               price: docs.message.price_list_rate,
-              stock: res.qty,
             };
           } catch (error) {
             return {};
@@ -94,7 +92,7 @@ export default function ChonSanPham() {
       if (data.length <= 0) return;
 
       setAllProducts(data);
-      setSelected(products.map((res) => res.name));
+      setSelected(rc_products.map((res) => res.name));
     };
 
     init();
@@ -159,9 +157,6 @@ export default function ChonSanPham() {
                 <Text style={styles.itemName}>{item.name}</Text>
                 <View style={styles.row}>
                   <Text style={styles.itemUnit}>Đơn vị: {item.stock_uom}</Text>
-                  <Text style={[styles.itemUnit, { marginLeft: 15 }]}>
-                    SL: {item.stock}
-                  </Text>
                 </View>
               </View>
               <Text style={styles.itemPrice}>{formatVND(item.price)}</Text>
@@ -184,11 +179,11 @@ export default function ChonSanPham() {
                 image: res.image,
                 price: res.price,
                 stock: res.stock,
-                qty: products.find((p) => p.name === res.name)?.qty || 1,
+                qty: rc_products.find((p) => p.name === res.name)?.qty || 1,
               };
             });
 
-          setProducts(newProducts);
+          setRCProducts(newProducts);
           router.back();
         }}
       >

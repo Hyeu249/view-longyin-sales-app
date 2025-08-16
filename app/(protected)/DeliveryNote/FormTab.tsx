@@ -38,18 +38,46 @@ export default function FormTab({
   const [loading, setLoading] = useState<boolean>(!!id); // loading true nếu có id
   const [isSubmitForm, setIsSubmitForm] = useState(false);
   const [isWorkflowForm, setIsWorkflowForm] = useState(false);
-  const [itemOptions, setItemOptions] = useState([]);
+  const [itemOptions, setItemOptions] = useState<any[]>([]);
 
   useEffect(() => {
     const init = async () => {
+      const bundle = await db.getDocList("Product Bundle", {
+        fields: ["*"],
+        limit: 10000,
+      });
+      const data = await Promise.all(
+        bundle.map(async (res: any) => {
+          try {
+            const doc = db.getDoc("Product Bundle", res.name);
+            return doc;
+          } catch (error) {
+            return {};
+          }
+        })
+      );
       const options = await getItemOptions(
         call,
         userInfo?.company,
         userInfo?.warehouse
       );
-      setItemOptions(options);
+      const itemNames = options.map((res: any) => res.value);
+      const filterData = data.filter((res) => {
+        const bundleItemNames = res.items.map((res: any) => res.item_code);
+        const hasCommon = itemNames.some((item: any) =>
+          bundleItemNames.includes(item)
+        );
+        return hasCommon;
+      });
+      const bundleOptions = filterData.map((res) => ({
+        name: res.new_item_code,
+        label: res.new_item_code,
+      }));
+      const newOptions = [...bundleOptions, ...options];
+
+      setItemOptions(newOptions);
     };
-    init();
+    if (userInfo?.company && userInfo?.warehouse) init();
   }, [userInfo?.company, userInfo?.warehouse]);
 
   useEffect(() => {

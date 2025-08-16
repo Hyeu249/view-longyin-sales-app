@@ -31,9 +31,15 @@ type Props = {
   id: string;
   docstatus: number | undefined;
   setIsEdit: React.Dispatch<React.SetStateAction<boolean>>;
+  isEdit: boolean;
 };
 
-export default function SalesOrderTitle({ id, docstatus, setIsEdit }: Props) {
+export default function SalesOrderTitle({
+  id,
+  docstatus,
+  setIsEdit,
+  isEdit,
+}: Props) {
   const bottomSheetRef = useRef<BottomSheetHandle>(null);
   const { db } = useFrappe();
   const navigation = useNavigation();
@@ -53,11 +59,13 @@ export default function SalesOrderTitle({ id, docstatus, setIsEdit }: Props) {
       onClick: () => {},
     },
     {
-      icon: () => <AntDesign name="edit" size={20} color="#444" />,
-      label: "Chỉnh sửa",
+      icon: () => (
+        <AntDesign name={isEdit ? "eyeo" : "edit"} size={20} color="#444" />
+      ),
+      label: isEdit ? "Chi tiết" : "Chỉnh sửa",
       onClick: () => {
         if (docstatus !== 0) return;
-        setIsEdit(true);
+        setIsEdit((prev) => !prev);
         closeSheet();
       },
     },

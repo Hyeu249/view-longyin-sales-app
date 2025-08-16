@@ -26,14 +26,16 @@ const PRIMARY = "#0A84FF";
 export default function OrderProductSection({ qr_code, isEdit }: Props) {
   const router = useRouter();
 
-  const { products, setProducts, increaseProduct, decreaseProduct } =
+  const { rc_products, setRCProducts, increaseRCProduct, decreaseProduct } =
     useSalesOrder();
+
+  if (!isEdit && rc_products.length === 0) return <></>;
 
   return (
     <View style={{}}>
       {/* Section: Sản phẩm header */}
       <View style={styles.sectionHeaderRow}>
-        <Text style={styles.sectionTitle}>Sản phẩm bán đi</Text>
+        <Text style={styles.sectionTitle}>Sản phẩm thu về</Text>
         <TouchableOpacity style={styles.storeRow}>
           <Text style={styles.storeText}>Cửa hàng chính</Text>
           <Ionicons name="chevron-down" size={18} color="#666" />
@@ -41,7 +43,7 @@ export default function OrderProductSection({ qr_code, isEdit }: Props) {
       </View>
 
       {/* Product items */}
-      {products.map((p) => (
+      {rc_products.map((p) => (
         <Pressable
           key={p.name}
           android_ripple={{ color: "#eee" }}
@@ -65,7 +67,7 @@ export default function OrderProductSection({ qr_code, isEdit }: Props) {
             {isEdit && (
               <TouchableOpacity
                 onPress={() =>
-                  setProducts((prev: Product[]) =>
+                  setRCProducts((prev: Product[]) =>
                     prev.map((res) => decreaseProduct(res, p.name))
                   )
                 }
@@ -82,8 +84,8 @@ export default function OrderProductSection({ qr_code, isEdit }: Props) {
             {isEdit && (
               <TouchableOpacity
                 onPress={() =>
-                  setProducts((prev: Product[]) =>
-                    prev.map((res) => increaseProduct(res, p.name))
+                  setRCProducts((prev: Product[]) =>
+                    prev.map((res) => increaseRCProduct(res, p.name))
                   )
                 }
                 style={styles.qtyBtn}
@@ -97,7 +99,7 @@ export default function OrderProductSection({ qr_code, isEdit }: Props) {
           {isEdit && (
             <TouchableOpacity
               onPress={() =>
-                setProducts((prev) =>
+                setRCProducts((prev) =>
                   prev.filter((item) => item.name !== p.name)
                 )
               }
@@ -114,7 +116,7 @@ export default function OrderProductSection({ qr_code, isEdit }: Props) {
         <View style={styles.actionRow}>
           <TouchableOpacity
             style={styles.actionOutline}
-            onPress={() => router.push("/SalesOrders/ProductSelector")}
+            onPress={() => router.push("/SalesOrders/ReceiveProductSelector")}
           >
             <Ionicons name="add" size={18} color={PRIMARY} />
             <Text style={[styles.actionOutlineText, { color: PRIMARY }]}>
