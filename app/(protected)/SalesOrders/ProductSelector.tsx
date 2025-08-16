@@ -15,7 +15,7 @@ import { useRouter, useNavigation } from "expo-router";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useFrappe } from "@/context/FrappeContext";
 import { useSalesOrder } from "@/context/SalesOrderContext";
-import { getItemOptions } from "@/utils/api";
+import { getStockItems } from "@/utils/api";
 import { headerShadow } from "@/components/HeaderShadow";
 import { formatVND } from "@/utils/type";
 
@@ -53,13 +53,13 @@ export default function ChonSanPham() {
 
   useEffect(() => {
     const init = async () => {
-      const options = await getItemOptions(
+      const stock = await getStockItems(
         call,
         userInfo?.company,
         userInfo?.warehouse
       );
       const data = await Promise.all(
-        options.map(async (res: any) => {
+        stock.map(async (res: any) => {
           try {
             const docs: any = await call.get(
               "erpnext.stock.get_item_details.get_item_details",
@@ -67,7 +67,7 @@ export default function ChonSanPham() {
                 args: {
                   company: userInfo?.company,
                   qty: 1,
-                  item_code: res.value,
+                  item_code: res.item_code,
                   customer: customer.name,
                   doctype: "Delivery Note",
                   selling_price_list: customer.default_price_list,
@@ -83,6 +83,7 @@ export default function ChonSanPham() {
               stock_uom: docs.message.stock_uom,
               image: docs.message.image,
               price: docs.message.price_list_rate,
+              stock: res.qty,
             };
           } catch (error) {
             return {};
@@ -156,7 +157,12 @@ export default function ChonSanPham() {
               </View>
               <View style={styles.itemInfo}>
                 <Text style={styles.itemName}>{item.name}</Text>
-                <Text style={styles.itemUnit}>Đơn vị: {item.stock_uom}</Text>
+                <View style={styles.row}>
+                  <Text style={styles.itemUnit}>Đơn vị: {item.stock_uom}</Text>
+                  <Text style={[styles.itemUnit, { marginLeft: 15 }]}>
+                    SL: {item.stock}
+                  </Text>
+                </View>
               </View>
               <Text style={styles.itemPrice}>{formatVND(item.price)}</Text>
             </View>
@@ -177,6 +183,7 @@ export default function ChonSanPham() {
                 stock_uom: res.stock_uom,
                 image: res.image,
                 price: res.price,
+                stock: res.stock,
                 qty: products.find((p) => p.name === res.name)?.qty || 1,
               };
             });
@@ -276,5 +283,9 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     fontSize: 14,
     color: "#666",
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
   },
 });

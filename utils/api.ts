@@ -68,3 +68,19 @@ export async function getItemOptions(
     };
   });
 }
+
+export async function getStockItems(
+  call: any,
+  company: string,
+  warehouse: string,
+  date: string = ""
+) {
+  const reports = await getStockLedgerReport(call, company, warehouse);
+
+  return reports.map((res: any) => {
+    return {
+      item_code: res.item_code,
+      qty: res.qty_after_transaction,
+    };
+  });
+}

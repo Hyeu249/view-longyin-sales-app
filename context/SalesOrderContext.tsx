@@ -8,6 +8,7 @@ export type Product = {
   price: number;
   image: string | undefined;
   qty: number;
+  stock: number;
 };
 
 type Customer = {
@@ -49,7 +50,9 @@ export const SalesOrderProvider = ({ children }: { children: ReactNode }) => {
 
   const increaseProduct = (name: string) => {
     setProducts((prev) =>
-      prev.map((p) => (p.name === name ? { ...p, qty: p.qty + 1 } : p))
+      prev.map((p) =>
+        p.name === name ? { ...p, qty: p.qty < p.stock ? p.qty + 1 : p.qty } : p
+      )
     );
   };
 
