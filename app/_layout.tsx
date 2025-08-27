@@ -24,7 +24,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import RFIDWithUHFA8 from "@/utils/mockup";
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(tabs)",
+  initialRouteName: "(protected)",
 };
 import { successNotification, errorNotification } from "@/utils/notification";
 
