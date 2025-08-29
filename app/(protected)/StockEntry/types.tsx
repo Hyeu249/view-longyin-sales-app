@@ -15,6 +15,12 @@ export type RFID = {
   brand: string;
 };
 
+export type Bundle = {
+  name: string;
+  bundle: string;
+  qty: number;
+};
+
 // 👉 Record Type (1 Stock Entry)
 export type StockEntry = {
   company: string;
@@ -27,6 +33,7 @@ export type StockEntry = {
   post_weighing_attach_img: string;
   items: Item[];
   rfids: RFID[];
+  bundle: Bundle[];
 };
 
 import { View } from "@/components/Themed";

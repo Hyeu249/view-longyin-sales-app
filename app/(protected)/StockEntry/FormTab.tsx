@@ -85,6 +85,7 @@ export default function FormTab({
           to_warehouse: to_warehouse,
           items: items,
           rfids: [],
+          bundle: [],
         });
       };
       api();
@@ -192,6 +193,33 @@ export default function FormTab({
           ],
         },
         {
+          label: "Bundle",
+          fields: [
+            {
+              label: "Bundle",
+              type: "child_table",
+              field_name: "bundle",
+              doctype: "Bundle Detail",
+              child_fields: [
+                {
+                  label: "Bundle",
+                  field_name: "bundle",
+                  doctype: "Product Bundle",
+                  type: "link",
+                  required: true,
+                },
+                {
+                  label: "Quantity",
+                  field_name: "qty",
+                  type: "int",
+                  required: true,
+                  default: 0,
+                },
+              ],
+            },
+          ],
+        },
+        {
           label: "Product",
           fields: [
             {
@@ -199,7 +227,6 @@ export default function FormTab({
               type: "child_table",
               field_name: "items",
               doctype: "Stock Entry Detail",
-              required: true,
               child_fields: [
                 {
                   label: "Item",

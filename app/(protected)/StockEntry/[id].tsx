@@ -47,6 +47,7 @@ export default function Component() {
       post_weighing_attach_img: "",
       items: [],
       rfids: [],
+      bundle: [],
     },
   });
 
