@@ -24,6 +24,7 @@ import { v4 as uuidv4 } from "uuid";
 import DatePicker from "@/components/DatePicker";
 import KeyboardPadding from "@/components/KeyboardPadding";
 import { formatVND } from "@/utils/type";
+import { useFrappe } from "@/context/FrappeContext";
 
 type Props = {
   fields: BaseField[];
@@ -96,10 +97,12 @@ export default function Component({
     closeSheet();
   };
 
+  const { __ } = useFrappe();
+
   return (
     <ScrollView>
       <View style={[styles.container, style]}>
-        <Header label={label} rightButton={openSheet} view={view} />
+        <Header label={__(label)} rightButton={openSheet} view={view} />
         {value?.map((e, index) => (
           <TableItem
             fields={fields.filter((res) => !res.hidden)}
@@ -127,7 +130,7 @@ export default function Component({
 
       <BottomSheetModel ref={bottomSheetRef} onDismiss={resetItems}>
         <ScrollView style={{ flex: 1, width: "100%", paddingBottom: 60 }}>
-          <Text style={styles.title}>Add new</Text>
+          <Text style={styles.title}>{__("Add")}</Text>
           <KeyboardPadding padding={150}>
             {fields
               .filter((res) => !res.hidden)
@@ -140,7 +143,7 @@ export default function Component({
                         control={control}
                         rules={
                           d_field.required
-                            ? { required: `${d_field.label} là bắt buộc` }
+                            ? { required: `${__(d_field.label)} là bắt buộc` }
                             : undefined
                         }
                         render={({ field: { onChange, value } }) => {
@@ -172,7 +175,7 @@ export default function Component({
                         control={control}
                         rules={
                           d_field.required
-                            ? { required: `${d_field.label} là bắt buộc` }
+                            ? { required: `${__(d_field.label)} là bắt buộc` }
                             : undefined
                         }
                         render={({ field: { onChange, value } }) => {
@@ -201,7 +204,7 @@ export default function Component({
                         name={d_field.field_name}
                         rules={
                           d_field.required
-                            ? { required: `${d_field.label} là bắt buộc` }
+                            ? { required: `${__(d_field.label)} là bắt buộc` }
                             : undefined
                         }
                         render={({ field: { onChange, value } }) => (
@@ -230,12 +233,12 @@ export default function Component({
                         control={control}
                         rules={
                           d_field.required
-                            ? { required: `${d_field.label} là bắt buộc` }
+                            ? { required: `${__(d_field.label)} là bắt buộc` }
                             : undefined
                         }
                         render={({ field: { onChange, onBlur, value } }) => (
                           <TextInput
-                            label={d_field.label}
+                            label={__(d_field.label)}
                             error={!!errors[d_field.field_name]}
                             mode="outlined"
                             onBlur={onBlur}
@@ -265,12 +268,12 @@ export default function Component({
                         control={control}
                         rules={
                           d_field.required
-                            ? { required: `${d_field.label} là bắt buộc` }
+                            ? { required: `${__(d_field.label)} là bắt buộc` }
                             : undefined
                         }
                         render={({ field: { onChange, onBlur, value } }) => (
                           <TextInput
-                            label={d_field.label}
+                            label={__(d_field.label)}
                             error={!!errors[d_field.field_name]}
                             mode="outlined"
                             onBlur={onBlur}
@@ -318,9 +321,11 @@ type Header = {
 };
 function Header({ label, rightButton, view }: Header) {
   // render item name: Longyin Bình gas 12kg
+  const { __ } = useFrappe();
+
   const button = () => (
     <Pressable onPress={rightButton}>
-      <Text style={styles.headerButton}>Add item</Text>
+      <Text style={styles.headerButton}>{__("New")}</Text>
     </Pressable>
   );
   return (

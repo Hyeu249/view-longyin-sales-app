@@ -12,6 +12,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 import { OptionType } from "@/utils/type";
+import { useFrappe } from "@/context/FrappeContext";
 
 const defaultDropdownStyle = {
   height: 46,
@@ -57,6 +58,8 @@ const DropdownComponent = ({
 
   const errorColor = "#b3261e";
   const labelColor = error ? errorColor : isFocus ? color : "#000";
+
+  const { __ } = useFrappe();
 
   useEffect(() => {
     Animated.timing(animatedIsFocused, {
@@ -104,7 +107,7 @@ const DropdownComponent = ({
     if (value || isFocus) {
       return (
         <Animated.Text style={[baseLabelStyle, animatedLabelStyle]}>
-          {label}
+          {__(label)}
         </Animated.Text>
       );
     }
@@ -134,7 +137,7 @@ const DropdownComponent = ({
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? label : "..."}
+        placeholder={!isFocus ? __(label) : "..."}
         searchPlaceholder="Search..."
         value={value}
         disable={disable}

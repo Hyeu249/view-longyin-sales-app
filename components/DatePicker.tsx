@@ -6,6 +6,7 @@ import {
   en,
   registerTranslation,
 } from "react-native-paper-dates";
+import { useFrappe } from "@/context/FrappeContext";
 
 registerTranslation("en", en);
 
@@ -49,10 +50,12 @@ export default function DateInput({
   // ✅ validate trước khi truyền vào
   const parsedDate = isValidDate(new Date(value)) ? new Date(value) : undefined;
 
+  const { __ } = useFrappe();
+
   return (
     <View style={style}>
       <TextInput
-        label={label}
+        label={__(label)}
         value={value}
         mode="outlined"
         showSoftInputOnFocus={false}

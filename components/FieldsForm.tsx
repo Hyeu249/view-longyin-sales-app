@@ -42,7 +42,7 @@ export default function EditProfileScreen({
   const [tempOnChange, setTempOnChange] = useState<(val: any) => void>();
   const colorScheme = useColorScheme();
 
-  const { auth, call, file } = useFrappe();
+  const { __ } = useFrappe();
   const router = useRouter();
 
   const handleEditField = (
@@ -69,7 +69,7 @@ export default function EditProfileScreen({
 
         return (
           <View style={{}} key={i}>
-            <Text style={styles.sectionTitle}>{res.label}</Text>
+            <Text style={styles.sectionTitle}>{__(res.label)}</Text>
             <View
               style={[
                 styles.card,
@@ -92,7 +92,7 @@ export default function EditProfileScreen({
                           control={control}
                           rules={
                             d_field.required
-                              ? { required: `${d_field.label} là bắt buộc` }
+                              ? { required: `${__(d_field.label)} là bắt buộc` }
                               : undefined
                           }
                           render={({ field: { onChange, value } }) => (
@@ -123,7 +123,7 @@ export default function EditProfileScreen({
                           name={d_field.field_name}
                           rules={
                             d_field.required
-                              ? { required: `${d_field.label} là bắt buộc` }
+                              ? { required: `${__(d_field.label)} là bắt buộc` }
                               : undefined
                           }
                           render={({ field: { onChange, value } }) => (
@@ -160,7 +160,7 @@ export default function EditProfileScreen({
                           name={d_field.field_name}
                           rules={
                             d_field.required
-                              ? { required: `${d_field.label} là bắt buộc` }
+                              ? { required: `${__(d_field.label)} là bắt buộc` }
                               : undefined
                           }
                           render={({ field: { onChange, value } }) => (
@@ -190,7 +190,7 @@ export default function EditProfileScreen({
                           control={control}
                           rules={
                             d_field.required
-                              ? { required: `${d_field.label} là bắt buộc` }
+                              ? { required: `${__(d_field.label)} là bắt buộc` }
                               : undefined
                           }
                           render={({ field: { onChange, value } }) => {
@@ -229,7 +229,7 @@ export default function EditProfileScreen({
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <Text style={{ fontWeight: "600", marginBottom: 10 }}>
-              Edit {tempField?.label}
+              {__("Edit")} {__(tempField?.label || "")}
             </Text>
 
             {tempField?.type === "link" && (
@@ -325,13 +325,13 @@ export default function EditProfileScreen({
                 style={[styles.btn, { backgroundColor: "#ccc" }]}
                 onPress={() => setModalVisible(false)}
               >
-                <Text>Cancel</Text>
+                <Text>{__("Cancel")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.btn, { backgroundColor: "#007AFF" }]}
                 onPress={handleSaveField}
               >
-                <Text style={{ color: "#fff" }}>Save</Text>
+                <Text style={{ color: "#fff" }}>{__("Save")}</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -354,6 +354,8 @@ function ProfileItem({
   const sliceValue = value.slice(0, sliceInt);
   let newValue;
 
+  const { __ } = useFrappe();
+
   if (value && Number.isInteger(Number(value))) {
     newValue = new Intl.NumberFormat("vi-VN").format(Number(value));
   } else {
@@ -361,7 +363,7 @@ function ProfileItem({
   }
   return (
     <TouchableOpacity style={styles.itemRow} onPress={onPress}>
-      <Text style={styles.label}>{label}</Text>
+      <Text style={styles.label}>{__(label)}</Text>
       <View style={styles.valueRow}>
         <Text style={styles.value} numberOfLines={1}>
           {newValue}

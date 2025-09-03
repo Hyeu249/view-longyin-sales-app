@@ -134,21 +134,21 @@ export default function FormTab({
           label: "",
           fields: [
             {
-              label: __("Company"),
+              label: "Company",
               field_name: "company",
               doctype: "Company",
               type: "link",
               required: true,
             },
             {
-              label: __("Stock Entry type"),
+              label: "Stock Entry Type",
               field_name: "stock_entry_type",
               doctype: "Stock Entry Type",
               type: "link",
               required: true,
             },
             {
-              label: __("Transaction type"),
+              label: "Transaction type",
               field_name: "transaction_type",
               type: "select",
               options: [
@@ -224,7 +224,7 @@ export default function FormTab({
           label: "Product",
           fields: [
             {
-              label: "items",
+              label: "Items",
               type: "child_table",
               field_name: "items",
               doctype: "Stock Entry Detail",
@@ -262,7 +262,7 @@ export default function FormTab({
           ],
         },
         {
-          label: "signature",
+          label: "Signature",
           fields: [
             {
               label: "Authority",
