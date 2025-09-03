@@ -17,7 +17,7 @@ type ButtonType = "Cancel" | "Submit" | "";
 
 export default function Component({ paddingBottom = 0, doctype, id }: Props) {
   const colorScheme = useColorScheme();
-  const { db, call } = useFrappe();
+  const { db, call, __ } = useFrappe();
   const router = useRouter();
   const docRoute = doctype.replace(/\s+/g, "");
 
@@ -49,7 +49,7 @@ export default function Component({ paddingBottom = 0, doctype, id }: Props) {
             }}
             style={[styles.button, { backgroundColor: "#00000014" }]}
           >
-            <Text style={{ fontWeight: "600" }}>Cancel</Text>
+            <Text style={{ fontWeight: "600" }}>{__("Cancel")}</Text>
           </Button>
         )}
 
@@ -66,7 +66,9 @@ export default function Component({ paddingBottom = 0, doctype, id }: Props) {
               { backgroundColor: Colors[colorScheme ?? "light"].tint },
             ]}
           >
-            <Text style={{ fontWeight: "600", color: "white" }}>Submit</Text>
+            <Text style={{ fontWeight: "600", color: "white" }}>
+              {__("Submit")}
+            </Text>
           </Button>
         )}
       </View>

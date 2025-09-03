@@ -3,6 +3,7 @@ import { Text, View } from "@/components/Themed";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
 import { TextInput, Button, HelperText, Card } from "react-native-paper";
+import { useFrappe } from "@/context/FrappeContext";
 
 type Props = {
   onCancel: () => void;
@@ -16,7 +17,7 @@ export default function Component({
   paddingBottom = 0,
 }: Props) {
   const colorScheme = useColorScheme();
-
+  const { __ } = useFrappe();
   return (
     <View style={{ width: "100%" }}>
       {/* Các nội dung khác nếu có */}
@@ -27,7 +28,9 @@ export default function Component({
           onPress={onCancel}
           style={[styles.button, { backgroundColor: "#00000014" }]}
         >
-          <Text style={{ fontWeight: "600", color: "gray" }}>Cancel</Text>
+          <Text style={{ fontWeight: "600", color: "gray" }}>
+            {__("Cancel")}
+          </Text>
         </Button>
         <Button
           mode="contained"
@@ -37,7 +40,9 @@ export default function Component({
             { backgroundColor: Colors[colorScheme ?? "light"].tint },
           ]}
         >
-          <Text style={{ fontWeight: "600", color: "white" }}>Save</Text>
+          <Text style={{ fontWeight: "600", color: "white" }}>
+            {__("Save")}
+          </Text>
         </Button>
       </View>
     </View>

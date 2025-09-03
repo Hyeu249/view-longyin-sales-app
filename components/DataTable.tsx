@@ -339,9 +339,11 @@ function Header({ label, rightButton, view }: Header) {
 function Footer({ price }: Footer) {
   if (!price) return <></>;
   // render total price, space between, total:     100.000vnd
+  const { __ } = useFrappe();
+
   return (
     <View style={styles.footer}>
-      <Text style={styles.footerLabel}>Total:</Text>
+      <Text style={styles.footerLabel}>{__("Total")}:</Text>
       <Text style={styles.footerPrice}>{formatVND(price)}</Text>
     </View>
   );
