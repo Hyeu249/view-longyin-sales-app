@@ -25,7 +25,7 @@ export default function Component() {
   const layout = Dimensions.get("window");
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "first", title: "Detail" },
+    { key: "first", title: __("Detail") },
     { key: "second", title: "RFIDs" },
   ]);
 
@@ -138,7 +138,7 @@ export default function Component() {
                   textAlign: "center",
                 }}
               >
-                {status}
+                {__(status)}
               </Text>
             )}
           </View>
