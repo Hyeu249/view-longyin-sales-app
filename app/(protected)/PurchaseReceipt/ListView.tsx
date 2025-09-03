@@ -40,7 +40,7 @@ const DOCTYPE = "Purchase Receipt";
 export default function Component() {
   const router = useRouter();
   const colorScheme = useColorScheme();
-  const { call } = useFrappe();
+  const { call, __, isTranslated } = useFrappe();
   const [allRequests, setAllRequests] = useState<Record[]>([]);
   const [filteredRequests, setFilteredRequests] = useState<Record[]>([]);
   const [statusFilter, setStatusFilter] = useState("All");
@@ -70,10 +70,11 @@ export default function Component() {
 
   useFocusEffect(
     useCallback(() => {
+      if (!isTranslated) return;
       const initWorkFlow = async () => {
         const workflows = await get_status_options();
         const options = workflows.map((value: string) => ({
-          label: value,
+          label: __(value),
           value: value,
         }));
         options.unshift({ label: "All", value: "All" });
@@ -128,7 +129,7 @@ export default function Component() {
       };
 
       init();
-    }, [])
+    }, [isTranslated])
   );
 
   useEffect(() => {
@@ -143,19 +144,19 @@ export default function Component() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: "Purchase Receipt List",
+      title: __("Receipt"),
       headerRight: () => (
         <HeaderMenu
           items={[
             {
-              title: "Create new",
+              title: __("Create"),
               onPress: async () => router.push("/PurchaseReceipt/create"),
             },
           ]}
         />
       ),
     });
-  }, []);
+  }, [isTranslated]);
 
   return (
     <View style={styles.container}>
@@ -240,7 +241,7 @@ export default function Component() {
                     fontWeight: "600",
                   }}
                 >
-                  {item.status}
+                  {__(item.status)}
                 </Text>
               </View>
             </View>

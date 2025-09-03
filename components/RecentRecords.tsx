@@ -130,7 +130,7 @@ export default function Component() {
         setRequests(newDocs);
       };
 
-      init();
+      if (isTranslated) init();
     }, [isTranslated])
   );
 

@@ -49,7 +49,7 @@ const options = [
 export default function Component() {
   const router = useRouter();
   const colorScheme = useColorScheme();
-  const { call } = useFrappe();
+  const { call, __, isTranslated } = useFrappe();
   const [allRequests, setAllRequests] = useState<Record[]>([]);
   const [filteredRequests, setFilteredRequests] = useState<Record[]>([]);
   const [statusFilter, setStatusFilter] = useState("All");
@@ -74,10 +74,11 @@ export default function Component() {
 
   useFocusEffect(
     useCallback(() => {
+      if (!isTranslated) return;
       const initWorkFlow = async () => {
         const workflows = await get_workflow_states();
         const options = workflows.map((res: any) => ({
-          label: res.state,
+          label: __(res.state),
           value: res.state,
         }));
         options.unshift({ label: "All", value: "All" });
@@ -145,7 +146,7 @@ export default function Component() {
       };
 
       init();
-    }, [])
+    }, [isTranslated])
   );
 
   useEffect(() => {
@@ -174,17 +175,18 @@ export default function Component() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: "Stock Entry List",
+      title: __("Stock Entry"),
       headerRight: () => (
         <HeaderMenu
           items={[
             {
-              title: "Create new Inbound",
+              title: __("Create") + " " + __("Inbound"),
               onPress: async () =>
                 router.push("/StockEntry/create?transaction_type=Inbound"),
             },
             {
-              title: "Create new Outbound",
+              title: __("Create") + " " + __("Outbound"),
+
               onPress: async () =>
                 router.push("/StockEntry/create?transaction_type=Outbound"),
             },
@@ -192,7 +194,7 @@ export default function Component() {
         />
       ),
     });
-  }, []);
+  }, [isTranslated]);
 
   return (
     <View style={styles.container}>
@@ -301,7 +303,7 @@ export default function Component() {
                     fontWeight: "600",
                   }}
                 >
-                  {item.status}
+                  {__(item.status)}
                 </Text>
               </View>
             </View>

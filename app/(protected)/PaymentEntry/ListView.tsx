@@ -31,9 +31,9 @@ export type Record = {
 
 const STATUS_OPTIONS = [
   { label: "All", value: "All" },
-  { label: "Approved", value: 1 },
-  { label: "Pending", value: 0 },
-  { label: "Rejected", value: 2 },
+  { label: "Submitted", value: 1 },
+  { label: "Draft", value: 0 },
+  { label: "Cancelled", value: 2 },
 ] as const;
 
 type StatusFilter = "All" | 0 | 1 | 2;
@@ -42,7 +42,7 @@ const DOCTYPE = "Payment Entry";
 export default function Component() {
   const router = useRouter();
   const colorScheme = useColorScheme();
-  const { call } = useFrappe();
+  const { call, __, isTranslated } = useFrappe();
   const [allRequests, setAllRequests] = useState<Record[]>([]);
   const [filteredRequests, setFilteredRequests] = useState<Record[]>([]);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>("All");
@@ -122,44 +122,50 @@ export default function Component() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: "Payment Entry List",
+      title: __("Payment Entry"),
       headerRight: () => (
         <HeaderMenu
           items={[
             {
-              title: "Create new",
+              title: __("Create"),
               onPress: async () => router.push("/PaymentEntry/create"),
             },
           ]}
         />
       ),
     });
-  }, []);
+  }, [isTranslated]);
 
   return (
     <View style={styles.container}>
       <View style={styles.filterRow}>
-        {STATUS_OPTIONS.map((option) => (
-          <TouchableOpacity
-            key={option.value}
-            onPress={() => setStatusFilter(option.value)}
-            style={[
-              styles.filterButton,
-              statusFilter === option.value && {
-                backgroundColor: Colors[colorScheme ?? "light"].tint,
-              },
-            ]}
-          >
-            <Text
-              style={{
-                color: statusFilter === option.value ? "white" : "#333",
-                fontWeight: "600",
-              }}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingHorizontal: 16, gap: 8 }}
+        >
+          {STATUS_OPTIONS.map((option: any) => (
+            <TouchableOpacity
+              key={option.value}
+              onPress={() => setStatusFilter(option.value)}
+              style={[
+                styles.filterButton,
+                statusFilter === option.value && {
+                  backgroundColor: Colors[colorScheme ?? "light"].tint,
+                },
+              ]}
             >
-              {option.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
+              <Text
+                style={{
+                  color: statusFilter === option.value ? "white" : "#333",
+                  fontWeight: "600",
+                }}
+              >
+                {__(option.label)}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
 
       <ScrollView contentContainerStyle={styles.scrollContent}>
@@ -214,7 +220,7 @@ export default function Component() {
                     fontWeight: "600",
                   }}
                 >
-                  {item.status}
+                  {__(item.status)}
                 </Text>
               </View>
             </View>

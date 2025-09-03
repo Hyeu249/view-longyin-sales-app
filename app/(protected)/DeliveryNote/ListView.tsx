@@ -46,7 +46,7 @@ const dates = getLastNDays(7); // tạo 7 ngày: hôm nay và 6 ngày trước
 export default function Component() {
   const router = useRouter();
   const colorScheme = useColorScheme();
-  const { call } = useFrappe();
+  const { call, __, isTranslated } = useFrappe();
   const [allRequests, setAllRequests] = useState<Record[]>([]);
   const [filteredRequests, setFilteredRequests] = useState<Record[]>([]);
   const [statusFilter, setStatusFilter] = useState("All");
@@ -78,10 +78,11 @@ export default function Component() {
 
   useFocusEffect(
     useCallback(() => {
+      if (!isTranslated) return;
       const initWorkFlow = async () => {
         const workflows = await get_status_options();
         const options = workflows.map((value: string) => ({
-          label: value,
+          label: __(value),
           value: value,
         }));
         options.unshift({ label: "All", value: "All" });
@@ -146,7 +147,7 @@ export default function Component() {
       };
 
       init();
-    }, [])
+    }, [isTranslated])
   );
 
   useEffect(() => {
@@ -171,19 +172,19 @@ export default function Component() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: "Delivery Note List",
+      title: __("Selling"),
       headerRight: () => (
         <HeaderMenu
           items={[
             {
-              title: "Create new",
+              title: __("Create"),
               onPress: async () => router.push("/DeliveryNote/create"),
             },
           ]}
         />
       ),
     });
-  }, []);
+  }, [isTranslated]);
 
   return (
     <View style={styles.container}>
@@ -289,7 +290,7 @@ export default function Component() {
                     fontWeight: "600",
                   }}
                 >
-                  {item.status}
+                  {__(item.status)}
                 </Text>
               </View>
             </View>
