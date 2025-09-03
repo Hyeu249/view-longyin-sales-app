@@ -126,7 +126,7 @@ export default function FormTab({
               required: true,
             },
             {
-              label: "Outstanding amount",
+              label: "Outstanding Amount",
               field_name: "outstanding_amount",
               type: "int",
             },
@@ -136,7 +136,7 @@ export default function FormTab({
           label: "Product",
           fields: [
             {
-              label: "items",
+              label: "Items",
               type: "child_table",
               field_name: "items",
               doctype: "Sales Invoice Item",

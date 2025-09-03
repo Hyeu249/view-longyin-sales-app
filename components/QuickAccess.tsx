@@ -5,41 +5,43 @@ import { useRouter } from "expo-router";
 import { Pressable, StyleSheet } from "react-native";
 import Colors from "@/constants/Colors";
 import { useColorScheme } from "@/components/useColorScheme";
+import { useFrappe } from "@/context/FrappeContext";
 
 export default function Component() {
   const router = useRouter();
   const colorScheme = useColorScheme();
+  const { __ } = useFrappe();
 
   const data = [
+    {
+      label: __("Stock"),
+      onClick: () => router.push("/StockEntry/ListView"),
+      icon: "university",
+    },
+    {
+      label: __("Selling"),
+      onClick: () => router.push("/DeliveryNote/ListView"),
+      icon: "truck",
+    },
+    {
+      label: __("Receipt"),
+      onClick: () => router.push("/PurchaseReceipt/ListView"),
+      icon: "file",
+    },
     {
       label: "M.Request",
       onClick: () => router.push("/MaterialRequest/ListView"),
       icon: "list-alt",
     },
     {
-      label: "Stock .E",
-      onClick: () => router.push("/StockEntry/ListView"),
-      icon: "university",
-    },
-    {
       label: "S.Order",
       onClick: () => router.push("/SalesOrder/ListView"),
       icon: "shopping-cart",
-    },
-    {
-      label: "D.Note",
-      onClick: () => router.push("/DeliveryNote/ListView"),
-      icon: "truck",
     },
     { label: "P.Order", onClick: () => {}, icon: "file-text" },
     {
       label: "Payment",
       onClick: () => router.push("/PaymentEntry/ListView"),
-      icon: "file",
-    },
-    {
-      label: "P.Receipt",
-      onClick: () => router.push("/PurchaseReceipt/ListView"),
       icon: "file",
     },
   ];
