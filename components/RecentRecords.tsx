@@ -45,7 +45,7 @@ const defaultOptions = {
 export default function Component() {
   const router = useRouter();
   const colorScheme = useColorScheme();
-  const { call } = useFrappe();
+  const { call, __, isTranslated } = useFrappe();
   const [requests, setRequests] = useState<Record[]>([]);
 
   useFocusEffect(
@@ -108,10 +108,11 @@ export default function Component() {
             icon,
             path,
           ]) => {
+            console.log("status: ", status);
             return {
               icon: icon,
               name: name,
-              status: status,
+              status: __(status),
               docstatus: docstatus,
               modified_by: modified_by,
               owner: owner,
@@ -130,12 +131,12 @@ export default function Component() {
       };
 
       init();
-    }, [])
+    }, [isTranslated])
   );
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Recent Records</Text>
+      <Text style={styles.title}>{__("Recent Records")}</Text>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {requests.map((item, index) => (
           <Pressable
@@ -179,6 +180,7 @@ export default function Component() {
               <View style={{ flexShrink: 1 }}>
                 <Text
                   style={{
+                    textAlign: "center",
                     backgroundColor: statusColor(item.docstatus)?.[0],
                     color: statusColor(item.docstatus)?.[1],
                     paddingHorizontal: 10,

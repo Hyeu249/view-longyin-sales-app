@@ -32,6 +32,7 @@ interface FrappeContextType {
   userInfo: Profile;
 
   __: (txt: string, replace?: any, context?: string | null) => string;
+  isTranslated: boolean;
 }
 
 const FrappeContext = createContext<FrappeContextType | undefined>(undefined);
@@ -69,6 +70,7 @@ export const FrappeProvider: React.FC<FrappeProviderProps> = ({ children }) => {
   });
 
   const [messages, setMessages] = useState<Record<string, string>>({});
+  const [isTranslated, setIsTranslated] = useState<boolean>(false);
 
   const frappeApp = new FrappeApp(FRAPPE_URL);
   const db = frappeApp.db();
@@ -84,6 +86,8 @@ export const FrappeProvider: React.FC<FrappeProviderProps> = ({ children }) => {
       setMessages(translations?.message?.__messages || {});
     } catch (error) {
       console.error("Failed to load translations:", error);
+    } finally {
+      setIsTranslated(true);
     }
   };
 
@@ -186,6 +190,7 @@ export const FrappeProvider: React.FC<FrappeProviderProps> = ({ children }) => {
         setUserInfo,
 
         __: translate,
+        isTranslated,
       }}
     >
       {children}

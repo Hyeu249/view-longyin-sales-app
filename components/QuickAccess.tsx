@@ -47,7 +47,7 @@ export default function Component() {
   ];
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Quick Access</Text>
+      <Text style={styles.title}>{__("Quick Links")}</Text>
       <View style={styles.listContainer}>
         {data.map((item, index) => (
           <View
