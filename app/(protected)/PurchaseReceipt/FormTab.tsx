@@ -152,7 +152,7 @@ export default function FormTab({
               required: true,
             },
             {
-              label: "Price_list",
+              label: "Price List",
               field_name: "buying_price_list",
               doctype: "Price List",
               type: "link",
@@ -170,7 +170,7 @@ export default function FormTab({
               required: true,
             },
             {
-              label: "Conversion rate",
+              label: "Conversion Rate",
               field_name: "conversion_rate",
               type: "int",
               required: true,
@@ -181,7 +181,7 @@ export default function FormTab({
           label: "Product",
           fields: [
             {
-              label: "items",
+              label: "Items",
               type: "child_table",
               field_name: "items",
               doctype: "Purchase Receipt Item",

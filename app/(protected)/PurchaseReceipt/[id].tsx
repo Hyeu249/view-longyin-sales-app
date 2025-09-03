@@ -24,12 +24,12 @@ export default function Component() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const isCreate = id === "create";
   const stringID = isCreate ? "" : id;
-  const { db, call } = useFrappe();
+  const { db, call, __ } = useFrappe();
 
   const layout = Dimensions.get("window");
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "first", title: "Detail" },
+    { key: "first", title: __("Detail") },
     { key: "second", title: "RFIDs" },
   ]);
 
@@ -94,7 +94,7 @@ export default function Component() {
 
         const items = [
           {
-            title: "Delete",
+            title: __("Delete"),
             onPress: async () => {
               try {
                 await db.deleteDoc(DOCTYPE, stringID);
@@ -185,7 +185,7 @@ export default function Component() {
                   textAlign: "center",
                 }}
               >
-                {status}
+                {__(status)}
               </Text>
             )}
           </View>
