@@ -30,6 +30,8 @@ interface FrappeContextType {
   setUser: React.Dispatch<React.SetStateAction<string>>;
   setUserInfo: React.Dispatch<React.SetStateAction<Profile>>;
   userInfo: Profile;
+
+  __: (txt: string, replace?: any, context?: string | null) => string;
 }
 
 const FrappeContext = createContext<FrappeContextType | undefined>(undefined);
@@ -66,23 +68,88 @@ export const FrappeProvider: React.FC<FrappeProviderProps> = ({ children }) => {
     driver: "",
   });
 
+  const [messages, setMessages] = useState<Record<string, string>>({});
+
   const frappeApp = new FrappeApp(FRAPPE_URL);
   const db = frappeApp.db();
   const call = frappeApp.call();
   const auth = frappeApp.auth();
   const file = frappeApp.file();
 
+  const loadTranslations = async () => {
+    try {
+      const translations: any = await call.post(
+        "hrms.www.hrms.get_context_for_dev"
+      );
+      setMessages(translations?.message?.__messages || {});
+    } catch (error) {
+      console.error("Failed to load translations:", error);
+    }
+  };
+
+  const getUser = async () => {
+    try {
+      const user = await auth.getLoggedInUser();
+      setUser(user);
+    } catch (error) {
+      console.error("Error getting logged in user:", error);
+    }
+  };
+
   useEffect(() => {
     const init = async () => {
-      try {
-        const user = await auth.getLoggedInUser();
-        setUser(user);
-      } catch (error) {
-        console.error("Error getting logged in user:", error);
-      }
+      await getUser();
     };
     init();
   }, []);
+
+  useEffect(() => {
+    const init = async () => {
+      await loadTranslations();
+    };
+    if (user) init();
+  }, [user]);
+
+  // ✅ Hàm translate
+  const translate = (
+    txt: string,
+    replace: any = null,
+    context: string | null = null
+  ): string => {
+    if (!txt || typeof txt !== "string") return txt;
+
+    let translated_text = "";
+    const key = txt;
+
+    if (context) {
+      translated_text = messages[`${key}:${context}`];
+    }
+    if (!translated_text) {
+      translated_text = messages[key] || txt;
+    }
+    if (replace && typeof replace === "object") {
+      translated_text = format(translated_text, replace);
+    }
+
+    return translated_text;
+  };
+
+  // ✅ Hàm format giống như trong Vue
+  function format(str: string, args: any): string {
+    if (str === undefined) return str;
+
+    let unkeyed_index = 0;
+    return str.replace(/\{(\w*)\}/g, (match, key) => {
+      if (key === "") {
+        key = unkeyed_index;
+        unkeyed_index++;
+      }
+      if (key == +key) {
+        return args[key] !== undefined ? args[key] : match;
+      }
+      return args[key] !== undefined ? args[key] : match;
+    });
+  }
 
   useEffect(() => {
     const init = async () => {
@@ -100,14 +167,26 @@ export const FrappeProvider: React.FC<FrappeProviderProps> = ({ children }) => {
           sales_person: doc.sales_person || "",
           driver: doc.driver || "",
         });
-      } catch (error) {}
+      } catch (error) {
+        console.log("whats up bro??", error);
+      }
     };
-    init();
+    if (user) init();
   }, [user]);
 
   return (
     <FrappeContext.Provider
-      value={{ db, call, auth, file, setUser, userInfo, setUserInfo }}
+      value={{
+        db,
+        call,
+        auth,
+        file,
+        setUser,
+        userInfo,
+        setUserInfo,
+
+        __: translate,
+      }}
     >
       {children}
     </FrappeContext.Provider>

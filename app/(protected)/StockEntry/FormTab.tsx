@@ -34,7 +34,7 @@ export default function FormTab({
   reset,
 }: Props) {
   const router = useRouter();
-  const { db, userInfo, call } = useFrappe();
+  const { db, userInfo, call, __ } = useFrappe();
   const [loading, setLoading] = useState<boolean>(!!id); // loading true nếu có id
   const [isSubmitForm, setIsSubmitForm] = useState(false);
   const [isWorkflowForm, setIsWorkflowForm] = useState(false);
@@ -47,6 +47,7 @@ export default function FormTab({
 
   useEffect(() => {
     if (id) {
+      console.log("__: ", __("API Endpoint"));
       db.getDoc(DOCTYPE, id)
         .then((docs: any) => {
           reset(docs);
@@ -133,21 +134,21 @@ export default function FormTab({
           label: "",
           fields: [
             {
-              label: "Company",
+              label: __("Company"),
               field_name: "company",
               doctype: "Company",
               type: "link",
               required: true,
             },
             {
-              label: "Stock Entry type",
+              label: __("Stock Entry type"),
               field_name: "stock_entry_type",
               doctype: "Stock Entry Type",
               type: "link",
               required: true,
             },
             {
-              label: "Transaction type",
+              label: __("Transaction type"),
               field_name: "transaction_type",
               type: "select",
               options: [
