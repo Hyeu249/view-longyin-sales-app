@@ -188,7 +188,7 @@ export default function FormTab({
               required: true,
             },
             {
-              label: "Price list",
+              label: "Price List",
               field_name: "selling_price_list",
               doctype: "Price List",
               type: "link",
@@ -207,7 +207,7 @@ export default function FormTab({
               required: true,
             },
             {
-              label: "Conversion rate",
+              label: "Conversion Rate",
               field_name: "plc_conversion_rate",
               type: "int",
               required: true,
@@ -225,7 +225,7 @@ export default function FormTab({
               required: true,
             },
             {
-              label: "Sales team",
+              label: "Sales Team",
               type: "child_table",
               field_name: "sales_team",
               doctype: "Sales Team",
@@ -253,7 +253,7 @@ export default function FormTab({
           label: "Product",
           fields: [
             {
-              label: "items",
+              label: "Items",
               type: "child_table",
               field_name: "items",
               doctype: "Delivery Note Item",
@@ -281,7 +281,7 @@ export default function FormTab({
                   default: 0,
                 },
                 {
-                  label: "Serial no",
+                  label: "Serial No",
                   field_name: "serial_no",
                   type: "char",
                   default: "",
@@ -298,7 +298,7 @@ export default function FormTab({
           ],
         },
         {
-          label: "signature",
+          label: "Signature",
           fields: [
             {
               label: "Authority",

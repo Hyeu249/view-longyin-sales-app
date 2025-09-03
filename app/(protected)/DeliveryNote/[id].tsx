@@ -27,15 +27,15 @@ export default function Component() {
   const { id } = useLocalSearchParams();
   const isCreate = id === "create";
   const stringID = isCreate ? "" : String(id);
-  const { db, call } = useFrappe();
+  const { db, call, __ } = useFrappe();
 
   const layout = Dimensions.get("window");
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "first", title: "Detail" },
+    { key: "first", title: __("Detail") },
     { key: "second", title: "RFIDs" },
-    { key: "third", title: "Purchase Receipt" },
-    { key: "four", title: "Sales Invoice" },
+    { key: "third", title: __("Purchase Receipt") },
+    { key: "four", title: __("Sales Invoice") },
   ]);
 
   const {
@@ -119,7 +119,7 @@ export default function Component() {
 
         const items = [
           {
-            title: "Delete",
+            title: __("Delete"),
             onPress: async () => {
               try {
                 await db.deleteDoc(DOCTYPE, stringID);
@@ -135,7 +135,7 @@ export default function Component() {
 
         if (doc.docstatus == 1) {
           items.unshift({
-            title: "Create Sales Invoice",
+            title: __("Create") + " " + __("Sales Invoice"),
             onPress: async () => {
               try {
                 const searchParams = {
@@ -163,7 +163,7 @@ export default function Component() {
             },
           });
           items.unshift({
-            title: "Create Purchase Receipt",
+            title: __("Create") + " " + __("Purchase Receipt"),
             onPress: async () => {
               router.push({
                 pathname: "/PurchaseReceipt/[id]",

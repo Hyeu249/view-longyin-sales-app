@@ -34,7 +34,7 @@ export default function FormTab({
   reset,
 }: Props) {
   const router = useRouter();
-  const { db, userInfo, call, __ } = useFrappe();
+  const { db, userInfo, call } = useFrappe();
   const [loading, setLoading] = useState<boolean>(!!id); // loading true nếu có id
   const [isSubmitForm, setIsSubmitForm] = useState(false);
   const [isWorkflowForm, setIsWorkflowForm] = useState(false);
@@ -47,7 +47,6 @@ export default function FormTab({
 
   useEffect(() => {
     if (id) {
-      console.log("__: ", __("API Endpoint"));
       db.getDoc(DOCTYPE, id)
         .then((docs: any) => {
           reset(docs);
