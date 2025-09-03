@@ -23,7 +23,7 @@ export default function Component() {
   const { id } = useLocalSearchParams();
   const isCreate = id === "create";
   const stringID = isCreate ? "" : String(id);
-  const { db, call } = useFrappe();
+  const { db, call, __ } = useFrappe();
 
   const layout = Dimensions.get("window");
   const [index, setIndex] = useState(0);
@@ -66,7 +66,7 @@ export default function Component() {
 
         const items = [
           {
-            title: "Delete",
+            title: __("Delete"),
             onPress: async () => {
               try {
                 await db.deleteDoc(DOCTYPE, stringID);

@@ -146,7 +146,7 @@ export default function FormTab({
               readonly: true,
             },
             {
-              label: "Paid amount",
+              label: "Paid Amount",
               field_name: "paid_amount",
               type: "int",
               required: true,
