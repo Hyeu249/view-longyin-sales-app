@@ -30,7 +30,7 @@ export default function Component({
 }: Props) {
   const router = useRouter();
 
-  const { call } = useFrappe();
+  const { call, __, isTranslated } = useFrappe();
   const [records, setRecords] = useState<PaymentEntry[]>([]);
 
   useFocusEffect(
@@ -38,7 +38,7 @@ export default function Component({
       const initData = async () => {
         const searchParams = {
           doctype: "Payment Entry",
-          fields: ["name", "posting_date", "docstatus", "paid_amount"],
+          fields: ["name", "posting_date", "status", "paid_amount"],
           filters: [["Payment Entry Reference", "reference_name", "=", id]],
           group_by: "name",
         };
@@ -55,7 +55,7 @@ export default function Component({
               return {
                 name: res[0],
                 posting_date: res[1],
-                docstatus: res[2],
+                status: __(res[2]),
                 paid_amount: res[3],
               };
             })
@@ -65,8 +65,8 @@ export default function Component({
         }
       };
 
-      if (id) initData();
-    }, [])
+      if (id && isTranslated) initData();
+    }, [id, isTranslated])
   );
 
   return (
@@ -79,12 +79,12 @@ export default function Component({
             type: "char",
           },
           {
-            label: "docstatus",
-            field_name: "docstatus",
+            label: "Status",
+            field_name: "status",
             type: "int",
           },
           {
-            label: "Paid amount",
+            label: "Amount",
             field_name: "paid_amount",
             type: "int",
           },

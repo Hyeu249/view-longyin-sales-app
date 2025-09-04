@@ -11,7 +11,7 @@ export type Item = {
 export type PaymentEntry = {
   name: string;
   posting_date: string;
-  docstatus: number;
+  status: string;
   paid_amount: string;
 };
 

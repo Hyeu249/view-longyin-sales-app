@@ -30,7 +30,7 @@ export default function Component({
 }: Props) {
   const router = useRouter();
 
-  const { call } = useFrappe();
+  const { call, __, isTranslated } = useFrappe();
   const [records, setRecords] = useState<SalesInvoice[]>([]);
 
   useFocusEffect(
@@ -38,7 +38,7 @@ export default function Component({
       const initData = async () => {
         const searchParams = {
           doctype: "Sales Invoice",
-          fields: ["name", "posting_date", "docstatus", "total_qty", "total"],
+          fields: ["name", "posting_date", "status", "total_qty", "total"],
           filters: [["Sales Invoice Item", "delivery_note", "=", id]],
           group_by: "name",
         };
@@ -54,7 +54,7 @@ export default function Component({
               return {
                 name: res[0],
                 posting_date: res[1],
-                docstatus: res[2],
+                status: __(res[2]),
                 total_qty: res[3],
                 total: res[4],
               };
@@ -65,8 +65,8 @@ export default function Component({
         }
       };
 
-      if (id) initData();
-    }, [])
+      if (id && isTranslated) initData();
+    }, [id, isTranslated])
   );
 
   return (
@@ -80,16 +80,16 @@ export default function Component({
           },
           {
             label: "Status",
-            field_name: "docstatus",
+            field_name: "status",
             type: "int",
           },
           {
-            label: "Total qty",
+            label: "Quantity",
             field_name: "total_qty",
             type: "int",
           },
           {
-            label: "Total",
+            label: "Total Price",
             field_name: "total",
             type: "int",
           },

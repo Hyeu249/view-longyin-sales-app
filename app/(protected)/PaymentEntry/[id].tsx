@@ -110,7 +110,7 @@ export default function Component() {
                   textAlign: "center",
                 }}
               >
-                {status}
+                {__(status)}
               </Text>
             )}
           </View>

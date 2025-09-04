@@ -42,7 +42,7 @@ export type SalesInvoice = {
   posting_date: string;
   total_qty: number;
   total: number;
-  docstatus: number;
+  status: string;
 };
 
 export type PurchaseReceipt = {
@@ -50,7 +50,7 @@ export type PurchaseReceipt = {
   posting_date: string;
   total_qty: number;
   total: number;
-  docstatus: number;
+  status: string;
 };
 
 import { View } from "@/components/Themed";
