@@ -2,6 +2,7 @@ import { StyleSheet, Pressable } from "react-native";
 import { Text, View } from "@/components/Themed";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { BaseField, formatVND } from "@/utils/type";
+import { useFrappe } from "@/context/FrappeContext";
 
 type Props<T extends Record<string, any>> = {
   fields: BaseField[];
@@ -29,10 +30,12 @@ export default function Component<T extends Record<string, any>>({
     fields.filter((res) => ["qty", "rate"].includes(res.field_name)).length >=
     2;
 
+  const { __ } = useFrappe();
+
   const total = () => {
     return (
       <View style={styles.transparentRow}>
-        <Text style={styles.fieldName}>total</Text>
+        <Text style={styles.fieldName}>Total Price</Text>
         <Text style={styles.value}>{formatVND(value.qty * value.rate)}</Text>
       </View>
     );
@@ -61,9 +64,11 @@ export default function Component<T extends Record<string, any>>({
             const render_value = isInt
               ? val.toLocaleString("vi-VN")
               : String(val).slice(0, 20);
+            const label = fields.find((res) => res.field_name == key)?.label;
+            const subLabel = __(label || "");
             return (
               <View style={styles.transparentRow} key={index}>
-                <Text style={styles.fieldName}>{key.slice(0, 7)}</Text>
+                <Text style={styles.fieldName}>{subLabel?.slice(0, 12)}</Text>
                 <Text style={styles.value}>{render_value}</Text>
               </View>
             );

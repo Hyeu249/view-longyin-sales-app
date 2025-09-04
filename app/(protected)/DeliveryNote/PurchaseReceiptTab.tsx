@@ -85,12 +85,12 @@ export default function Component({
               type: "int",
             },
             {
-              label: "Total qty",
+              label: "Quantity",
               field_name: "total_qty",
               type: "int",
             },
             {
-              label: "Total",
+              label: "Total Price",
               field_name: "total",
               type: "int",
             },

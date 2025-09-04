@@ -343,7 +343,7 @@ function Footer({ price }: Footer) {
 
   return (
     <View style={styles.footer}>
-      <Text style={styles.footerLabel}>{__("Total")}:</Text>
+      <Text style={styles.footerLabel}>{__("Total Price")}:</Text>
       <Text style={styles.footerPrice}>{formatVND(price)}</Text>
     </View>
   );

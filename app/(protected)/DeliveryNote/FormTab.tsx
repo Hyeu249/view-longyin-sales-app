@@ -178,7 +178,7 @@ export default function FormTab({
           ],
         },
         {
-          label: "Supplier",
+          label: "Customer place",
           fields: [
             {
               label: "Customer",
