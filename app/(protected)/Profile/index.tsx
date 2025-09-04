@@ -166,7 +166,7 @@ export default function EditProfileScreen() {
       </View>
 
       {/* Private Info */}
-      <Text style={styles.sectionTitle}>Private Information</Text>
+      <Text style={styles.sectionTitle}>{__("Private Information")}</Text>
       <View style={styles.card}>
         <ProfileItem
           label={__("Company")}
@@ -198,7 +198,7 @@ export default function EditProfileScreen() {
         />
       </View>
 
-      <Text style={styles.sectionTitle}>Sales Information</Text>
+      <Text style={styles.sectionTitle}>{__("Sales Information")}</Text>
       <View style={styles.card}>
         <ProfileItem
           label={__("Warehouse")}
