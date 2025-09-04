@@ -29,6 +29,11 @@ export default function Component() {
       icon: "file",
     },
     {
+      label: __("Payment"),
+      onClick: () => router.push("/PaymentEntry/ListView"),
+      icon: "file",
+    },
+    {
       label: "M.Request",
       onClick: () => router.push("/MaterialRequest/ListView"),
       icon: "list-alt",
@@ -39,11 +44,6 @@ export default function Component() {
       icon: "shopping-cart",
     },
     { label: "P.Order", onClick: () => {}, icon: "file-text" },
-    {
-      label: "Payment",
-      onClick: () => router.push("/PaymentEntry/ListView"),
-      icon: "file",
-    },
   ];
   return (
     <View style={styles.container}>
@@ -100,7 +100,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
-    paddingHorizontal: 16,
   },
   boxWrapper: {
     width: "23%", // 4 box / hàng
