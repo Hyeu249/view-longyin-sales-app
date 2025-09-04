@@ -301,7 +301,7 @@ export default function FormTab({
           label: "Signature",
           fields: [
             {
-              label: "Authority",
+              label: "",
               field_name: "authority",
               type: "signature",
             },

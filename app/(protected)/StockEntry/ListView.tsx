@@ -41,11 +41,6 @@ const STATUS_OPTIONS = [
 type StatusFilter = "All" | 0 | 1 | 2;
 const DOCTYPE = "Stock Entry";
 
-const options = [
-  { label: "Inbound", value: "Inbound" },
-  { label: "Outbound", value: "Outbound" },
-];
-
 export default function Component() {
   const router = useRouter();
   const colorScheme = useColorScheme();
@@ -57,6 +52,11 @@ export default function Component() {
   const [owner, setOwner] = useState("");
   const [transaction_type, setTransactionType] = useState("Outbound");
   const [statusOptions, setStatusOptions] = useState([]);
+
+  const options = [
+    { label: __("Inbound"), value: "Inbound" },
+    { label: __("Outbound"), value: "Outbound" },
+  ];
 
   const get_workflow_states = async () => {
     const searchParams = {
