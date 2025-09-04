@@ -3,9 +3,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import BackButton from "@/components/BackButton";
 import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
+import { useFrappe } from "@/context/FrappeContext";
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
+  const { __ } = useFrappe();
 
   return (
     <SafeAreaView style={{ flex: 1 }} edges={["bottom"]}>
@@ -23,7 +25,7 @@ export default function RootLayout() {
         <Stack.Screen
           name="index"
           options={{
-            title: "Profile",
+            title: __("Profile"),
           }}
         />
       </Stack>

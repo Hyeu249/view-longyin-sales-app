@@ -46,7 +46,7 @@ const DOCTYPE = "Delivery Note";
 export default function OrderListScreen() {
   const [activeFilter, setActiveFilter] = useState("Tất cả");
   const navigation = useNavigation();
-  const { call } = useFrappe();
+  const { call, __, isTranslated } = useFrappe();
   const [allRequests, setAllRequests] = useState<Record[]>([]);
   const [filteredRequests, setFilteredRequests] = useState<Record[]>([]);
   const router = useRouter();
@@ -55,7 +55,7 @@ export default function OrderListScreen() {
 
   useEffect(() => {
     navigation.setOptions({
-      title: "Orders",
+      title: __("Order"),
       headerRight: () => (
         <View style={styles.headerActions}>
           <TouchableOpacity style={{ marginRight: 10 }}>
@@ -67,7 +67,7 @@ export default function OrderListScreen() {
         </View>
       ),
     });
-  }, []);
+  }, [isTranslated]);
 
   const get_status_options = async () => {
     const searchParams = {

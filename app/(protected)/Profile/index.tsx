@@ -30,6 +30,9 @@ export default function EditProfileScreen() {
     file,
     userInfo: profile,
     setUserInfo: setProfile,
+
+    __,
+    isTranslated,
   } = useFrappe();
   const router = useRouter();
 
@@ -147,14 +150,14 @@ export default function EditProfileScreen() {
       {/* Basic Info */}
       <View style={styles.card}>
         <ProfileItem
-          label="Name"
+          label={__("Name")}
           value={profile?.first_name || ""}
           onPress={() =>
             handleEditField("Name", "first_name", profile?.first_name || "")
           }
         />
         <ProfileItem
-          label="Email"
+          label={__("Email")}
           value={profile?.email || ""}
           onPress={() =>
             handleEditField("Email", "email", profile?.email || "")
@@ -166,28 +169,28 @@ export default function EditProfileScreen() {
       <Text style={styles.sectionTitle}>Private Information</Text>
       <View style={styles.card}>
         <ProfileItem
-          label="Company"
+          label={__("Company")}
           value={profile?.company || ""}
           onPress={() =>
             handleEditField("Company", "company", profile?.company || "")
           }
         />
         <ProfileItem
-          label="Birthdate"
+          label={__("Birth Date")}
           value={profile?.birthdate || ""}
           onPress={() =>
             handleEditField("Birthdate", "birth_date", profile?.birthdate || "")
           }
         />
         <ProfileItem
-          label="Gender"
+          label={__("Gender")}
           value={profile?.gender || ""}
           onPress={() =>
             handleEditField("Gender", "gender", profile?.gender || "")
           }
         />
         <ProfileItem
-          label="Phone"
+          label={__("Phone")}
           value={profile?.phone || ""}
           onPress={() =>
             handleEditField("Phone", "phone", profile?.phone || "")
@@ -198,14 +201,14 @@ export default function EditProfileScreen() {
       <Text style={styles.sectionTitle}>Sales Information</Text>
       <View style={styles.card}>
         <ProfileItem
-          label="Warehouse"
+          label={__("Warehouse")}
           value={profile?.warehouse || ""}
           onPress={() =>
             handleEditField("Warehouse", "warehouse", profile?.warehouse || "")
           }
         />
         <ProfileItem
-          label="Sales Person"
+          label={__("Sales Person")}
           value={profile?.sales_person || ""}
           onPress={() =>
             handleEditField(
@@ -216,7 +219,7 @@ export default function EditProfileScreen() {
           }
         />
         <ProfileItem
-          label="Driver"
+          label={__("Driver")}
           value={profile?.driver || ""}
           onPress={() =>
             handleEditField("Driver", "driver", profile?.driver || "")
@@ -225,7 +228,7 @@ export default function EditProfileScreen() {
       </View>
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-        <Text style={styles.logoutText}>Logout</Text>
+        <Text style={styles.logoutText}>{__("Logout")}</Text>
       </TouchableOpacity>
 
       {/* Edit Modal */}
@@ -264,13 +267,13 @@ export default function EditProfileScreen() {
                 style={[styles.btn, { backgroundColor: "#ccc" }]}
                 onPress={() => setModalVisible(false)}
               >
-                <Text>Cancel</Text>
+                <Text>{__("Cancel")}</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={[styles.btn, { backgroundColor: "#007AFF" }]}
                 onPress={handleSaveField}
               >
-                <Text style={{ color: "#fff" }}>Save</Text>
+                <Text style={{ color: "#fff" }}>{__("Save")}</Text>
               </TouchableOpacity>
             </View>
           </View>

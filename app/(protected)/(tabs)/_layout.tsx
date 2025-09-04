@@ -6,6 +6,7 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import MiddleButton from "@/components/MiddleButton";
 import Profile from "@/components/Profile";
+import { useFrappe } from "@/context/FrappeContext";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 export function TabBarIcon(props: {
@@ -17,7 +18,7 @@ export function TabBarIcon(props: {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-
+  const { __, isTranslated } = useFrappe();
   return (
     <Tabs
       screenOptions={{
@@ -42,14 +43,14 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Dashboard",
+          title: __("Dashboard"),
           tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
         }}
       />
       <Tabs.Screen
         name="Orders"
         options={{
-          title: "Orders",
+          title: __("Order"),
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="list-alt" color={color} />
           ),
@@ -66,7 +67,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Reports"
         options={{
-          title: "Reports",
+          title: __("Report"),
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="pie-chart" color={color} />
           ),
@@ -75,7 +76,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="Invoices"
         options={{
-          title: "Invoices",
+          title: __("Invoice"),
           tabBarIcon: ({ color }) => (
             <TabBarIcon name="newspaper-o" color={color} />
           ),
