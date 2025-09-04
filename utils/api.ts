@@ -65,6 +65,7 @@ export async function getItemOptions(
     return {
       label: `${res.item_code}(SL: ${qty})`,
       value: res.item_code,
+      qty: res.qty_after_transaction,
     };
   });
 }

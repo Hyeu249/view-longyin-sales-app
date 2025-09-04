@@ -47,6 +47,7 @@ export default function FormTab({
         limit: 10000,
         filters: [["disabled", "=", 0]],
       });
+
       const data = await Promise.all(
         bundle.map(async (res: any) => {
           try {
@@ -57,19 +58,23 @@ export default function FormTab({
           }
         })
       );
+
       const options = await getItemOptions(
         call,
         userInfo?.company,
         userInfo?.warehouse
       );
-      const itemNames = options.map((res: any) => res.value);
+
       const filterData = data.filter((res) => {
-        const bundleItemNames = res.items.map((res: any) => res.item_code);
-        const hasCommon = itemNames.some((item: any) =>
-          bundleItemNames.includes(item)
+        const condition = res.items.every((item: any) =>
+          options.some(
+            (o: any) => o.value === item.item_code && o.qty == item.qty
+          )
         );
-        return hasCommon;
+
+        return condition;
       });
+
       const bundleOptions = filterData.map((res) => ({
         value: res.new_item_code,
         label: res.new_item_code,
