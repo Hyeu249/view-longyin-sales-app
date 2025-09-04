@@ -196,6 +196,7 @@ export default function EditProfileScreen({
                           render={({ field: { onChange, value } }) => {
                             return (
                               <ProfileItem
+                                options={d_field.options}
                                 label={d_field.label}
                                 value={String(value ?? "")}
                                 onPress={() => {
@@ -342,10 +343,12 @@ export default function EditProfileScreen({
 }
 
 function ProfileItem({
+  options,
   label,
   value,
   onPress,
 }: {
+  options?: any;
   label: string;
   value: string;
   onPress?: () => void;
@@ -356,7 +359,9 @@ function ProfileItem({
 
   const { __ } = useFrappe();
 
-  if (value && Number.isInteger(Number(value))) {
+  if (options?.length > 0) {
+    newValue = options?.find((res: any) => res.value == value).label;
+  } else if (value && Number.isInteger(Number(value))) {
     newValue = new Intl.NumberFormat("vi-VN").format(Number(value));
   } else {
     newValue = value.length > sliceInt ? `${sliceValue}...` : value;

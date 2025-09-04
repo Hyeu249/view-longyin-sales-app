@@ -34,7 +34,7 @@ export default function FormTab({
   reset,
 }: Props) {
   const router = useRouter();
-  const { db, userInfo, call } = useFrappe();
+  const { db, userInfo, call, __ } = useFrappe();
   const [loading, setLoading] = useState<boolean>(!!id); // loading true nếu có id
   const [isSubmitForm, setIsSubmitForm] = useState(false);
   const [isWorkflowForm, setIsWorkflowForm] = useState(false);
@@ -151,8 +151,8 @@ export default function FormTab({
               field_name: "transaction_type",
               type: "select",
               options: [
-                { label: "Inbound", value: "Inbound" },
-                { label: "Outbound", value: "Outbound" },
+                { label: __("Inbound"), value: "Inbound" },
+                { label: __("Outbound"), value: "Outbound" },
               ],
               required: true,
             },
