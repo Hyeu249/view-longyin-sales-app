@@ -77,10 +77,18 @@ export default function Component() {
       if (!isTranslated) return;
       const initWorkFlow = async () => {
         const workflows = await get_workflow_states();
-        const options = workflows.map((res: any) => ({
-          label: __(res.state),
-          value: res.state,
-        }));
+        const options: any = [
+          ...new Map(
+            workflows.map((res: any) => [
+              res.state,
+              {
+                label: __(res.state),
+                value: res.state,
+              },
+            ])
+          ).values(),
+        ];
+
         options.unshift({ label: "All", value: "All" });
         setStatusOptions(options);
       };
