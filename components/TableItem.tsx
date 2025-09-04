@@ -35,7 +35,7 @@ export default function Component<T extends Record<string, any>>({
   const total = () => {
     return (
       <View style={styles.transparentRow}>
-        <Text style={styles.fieldName}>Total Price</Text>
+        <Text style={styles.fieldName}>{__("Total Price")}</Text>
         <Text style={styles.value}>{formatVND(value.qty * value.rate)}</Text>
       </View>
     );
