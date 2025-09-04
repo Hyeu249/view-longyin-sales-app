@@ -360,7 +360,7 @@ function ProfileItem({
   const { __ } = useFrappe();
 
   if (options?.length > 0) {
-    newValue = options?.find((res: any) => res.value == value).label;
+    newValue = options?.find((res: any) => res.value == value)?.label;
   } else if (value && Number.isInteger(Number(value))) {
     newValue = new Intl.NumberFormat("vi-VN").format(Number(value));
   } else {

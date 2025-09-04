@@ -112,7 +112,7 @@ export default function Component() {
         };
       }
       navigation.setOptions({
-        title: "",
+        title: __("Stock Entry"),
         headerTitle: () => (
           <View
             style={{

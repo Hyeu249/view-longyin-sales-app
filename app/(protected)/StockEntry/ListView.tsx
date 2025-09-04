@@ -180,13 +180,12 @@ export default function Component() {
         <HeaderMenu
           items={[
             {
-              title: __("Create") + " " + __("Inbound"),
+              title: __("Create Inbound"),
               onPress: async () =>
                 router.push("/StockEntry/create?transaction_type=Inbound"),
             },
             {
-              title: __("Create") + " " + __("Outbound"),
-
+              title: __("Create Outbound"),
               onPress: async () =>
                 router.push("/StockEntry/create?transaction_type=Outbound"),
             },
