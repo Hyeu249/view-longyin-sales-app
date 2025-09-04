@@ -45,6 +45,7 @@ export default function FormTab({
       const bundle = await db.getDocList("Product Bundle", {
         fields: ["*"],
         limit: 10000,
+        filters: [["disabled", "=", 0]],
       });
       const data = await Promise.all(
         bundle.map(async (res: any) => {
