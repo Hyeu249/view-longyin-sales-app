@@ -68,20 +68,24 @@ export default function FormTab({
       const filterData = data.filter((res) => {
         const condition = res.items.every((item: any) =>
           options.some(
-            (o: any) => o.value === item.item_code && o.qty == item.qty
+            (o: any) => o.value === item.item_code && o.qty >= item.qty
           )
         );
 
         return condition;
       });
 
-      const bundleOptions = filterData.map((res) => ({
-        value: res.new_item_code,
-        label: res.new_item_code,
-      }));
-      const newOptions = [...bundleOptions, ...options];
+      const bundleOptions = filterData.map((res) => {
+        const item = options.find(
+          (e: any) => res?.items?.[0].item_code == e.value
+        );
+        return {
+          label: `${res.new_item_code} SL: ${item?.qty}`,
+          value: res.new_item_code,
+        };
+      });
 
-      setItemOptions(newOptions);
+      setItemOptions(bundleOptions);
     };
     if (userInfo?.company && userInfo?.warehouse) init();
   }, [userInfo?.company, userInfo?.warehouse]);
