@@ -133,10 +133,12 @@ export const pickImage = async () => {
     allowsEditing: true,
     aspect: [4, 3],
     quality: 1,
+    base64: true,
   });
 
   if (!result.canceled) {
     const asset = result.assets[0];
+    return asset.file;
 
     // Lấy Blob từ URI
     const response = await fetch(asset.uri);
