@@ -7,12 +7,13 @@ import {
   ScrollView,
   Modal,
   Image,
+  Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useFrappe } from "@/context/FrappeContext";
 import { useRouter } from "expo-router";
 import LinkSelection from "@/components/LinkSelection";
-import { MainField, BaseField } from "@/utils/type";
+import { MainField, BaseField, pickImage } from "@/utils/type";
 import { Controller, FieldError, FieldErrors, Control } from "react-hook-form";
 import { HelperText, TextInput } from "react-native-paper";
 import Dropdown from "@/components/DropDown";
@@ -24,13 +25,17 @@ import { useColorScheme } from "@/components/useColorScheme";
 import Colors from "@/constants/Colors";
 
 type Props = {
+  id?: string;
+  doctype: string;
   fields: MainField[];
   control: Control<any>;
   errors: FieldErrors;
   setIsAllowSave: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function EditProfileScreen({
+export default function FieldsForm({
+  id,
+  doctype,
   fields,
   errors,
   control,
@@ -42,7 +47,7 @@ export default function EditProfileScreen({
   const [tempOnChange, setTempOnChange] = useState<(val: any) => void>();
   const colorScheme = useColorScheme();
 
-  const { __ } = useFrappe();
+  const { __, file, call } = useFrappe();
   const router = useRouter();
 
   const handleEditField = (
@@ -60,6 +65,48 @@ export default function EditProfileScreen({
     tempOnChange?.(tempValue || "");
     setIsAllowSave(true);
     setModalVisible(false);
+  };
+
+  const handleChangeImage = async (binary: any, fieldname: string) => {
+    try {
+      const file_data = await uploadFile(binary, fieldname);
+      if (file_data && file_data.status !== 200) return;
+      const avatarUrl = file_data?.data?.message?.file_url;
+
+      await call.put("frappe.client.set_value", {
+        doctype: doctype,
+        name: id,
+        fieldname: fieldname,
+        value: avatarUrl,
+      });
+      const path = doctype.split(" ").join("");
+      router.replace(`/${path}/${id}` as any);
+    } catch (err) {
+      console.log("error", err);
+    }
+  };
+
+  const uploadFile = async (binaryFile: any, fieldname: string) => {
+    const fileArgs = {
+      isPrivate: false,
+      folder: "Home",
+      file_url: "",
+      doctype: doctype,
+      docname: id,
+      fieldname: fieldname,
+    };
+
+    try {
+      const res = await file.uploadFile(
+        binaryFile,
+        fileArgs,
+        (completedBytes, totalBytes = 0) => {}
+      );
+
+      return res;
+    } catch (error) {
+      console.log("error uploading file:", error);
+    }
   };
 
   return (
@@ -156,7 +203,7 @@ export default function EditProfileScreen({
                           )}
                         </View>
                       );
-                    } else if (d_field.type === "image") {
+                    } else if (d_field.type === "image" && id) {
                       return (
                         <View
                           key={d_field.field_name}
@@ -178,16 +225,30 @@ export default function EditProfileScreen({
                                 : undefined
                             }
                             render={({ field: { onChange, value } }) => (
-                              <Image
-                                source={{ uri: FRAPPE_URL + value }}
-                                style={{
-                                  width: 350,
-                                  height: 350,
-                                  borderRadius: 8,
-                                  backgroundColor: "#f3f3f3",
+                              <Pressable
+                                style={{ flex: 1 }}
+                                onPress={async () => {
+                                  const binary = await pickImage();
+
+                                  if (binary) {
+                                    await handleChangeImage(
+                                      binary,
+                                      d_field.field_name
+                                    );
+                                  }
                                 }}
-                                resizeMode="contain"
-                              />
+                              >
+                                <Image
+                                  source={{ uri: FRAPPE_URL + value }}
+                                  style={{
+                                    width: 350,
+                                    height: 350,
+                                    borderRadius: 8,
+                                    backgroundColor: "#f3f3f3",
+                                  }}
+                                  resizeMode="contain"
+                                />
+                              </Pressable>
                             )}
                           />
                         </View>

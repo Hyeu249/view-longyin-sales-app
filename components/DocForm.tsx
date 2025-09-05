@@ -17,7 +17,7 @@ type Props = {
   errors: FieldErrors;
   isSubmitForm?: boolean;
   isWorkflowForm?: boolean;
-  doctype?: string;
+  doctype: string;
   id?: string;
 };
 
@@ -61,6 +61,8 @@ export default function DocForm({
         errors={errors}
         control={control}
         setIsAllowSave={setIsAllowSave}
+        doctype={doctype}
+        id={id}
       />
       {button()}
     </View>

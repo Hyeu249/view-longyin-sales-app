@@ -108,7 +108,6 @@ export default function Component() {
             icon,
             path,
           ]) => {
-            console.log("status: ", status);
             return {
               icon: icon,
               name: name,

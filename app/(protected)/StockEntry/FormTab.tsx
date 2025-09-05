@@ -262,6 +262,16 @@ export default function FormTab({
           ],
         },
         {
+          label: "Image",
+          fields: [
+            {
+              label: "",
+              field_name: "post_weighing_attach_img",
+              type: "image",
+            },
+          ],
+        },
+        {
           label: "Signature",
           fields: [
             {

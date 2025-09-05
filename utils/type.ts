@@ -1,3 +1,5 @@
+import * as ImagePicker from "expo-image-picker";
+
 export type OptionType = { label: string; value: string | undefined };
 export type BaseField = {
   label: string;
@@ -110,3 +112,38 @@ export function arraysAreDifferent<T>(
     return fields.some((field) => obj1[field] !== obj2[field]);
   });
 }
+
+export const pickImage2 = async () => {
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ["images", "videos"],
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+  if (!result.canceled) {
+    return result.assets[0].file;
+  }
+};
+
+export const pickImage = async () => {
+  console.log("cool!!!");
+  let result = await ImagePicker.launchImageLibraryAsync({
+    mediaTypes: ["images", "videos"],
+    allowsEditing: true,
+    aspect: [4, 3],
+    quality: 1,
+  });
+
+  if (!result.canceled) {
+    const asset = result.assets[0];
+
+    // Lấy Blob từ URI
+    const response = await fetch(asset.uri);
+    const blob = await response.blob();
+
+    return blob; // Đây chính là binary bạn cần
+  }
+
+  return null;
+};
