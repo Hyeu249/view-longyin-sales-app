@@ -64,166 +64,184 @@ export default function EditProfileScreen({
 
   return (
     <ScrollView style={styles.container}>
-      {fields.map((res, i) => {
-        const isPadding = res.padding === undefined ? false : true;
+      {fields
+        .filter((res) => !res.hidden)
+        .map((res, i) => {
+          const isPadding = res.padding === undefined ? false : true;
 
-        return (
-          <View style={{}} key={i}>
-            <Text style={styles.sectionTitle}>{__(res.label)}</Text>
-            <View
-              style={[
-                styles.card,
-                isPadding
-                  ? {
-                      paddingHorizontal: res.padding,
-                      paddingVertical: res.padding,
-                    }
-                  : {},
-              ]}
-            >
-              {res.fields
-                .filter((res) => !res.hidden)
-                .map((d_field, index) => {
-                  if (d_field.type === "child_table") {
-                    return (
-                      <View key={index}>
-                        <Controller
-                          name={d_field.field_name}
-                          control={control}
-                          rules={
-                            d_field.required
-                              ? { required: `${__(d_field.label)} là bắt buộc` }
-                              : undefined
-                          }
-                          render={({ field: { onChange, value } }) => (
-                            <DataTable
-                              style={{ marginTop: 10 }}
-                              fields={d_field.child_fields || []}
-                              label={d_field.label}
-                              value={value}
-                              onChange={(e) => {
-                                onChange(e);
-                                setIsAllowSave(true);
-                              }}
-                              error={!!errors[d_field.field_name]}
-                            />
-                          )}
-                        />
-                        <HelperText type="error">
-                          {(errors[d_field.field_name] as FieldError)
-                            ?.message ?? ""}
-                        </HelperText>
-                      </View>
-                    );
-                  } else if (d_field.type === "signature") {
-                    return (
-                      <View key={d_field.field_name}>
-                        <Controller
-                          control={control}
-                          name={d_field.field_name}
-                          rules={
-                            d_field.required
-                              ? { required: `${__(d_field.label)} là bắt buộc` }
-                              : undefined
-                          }
-                          render={({ field: { onChange, value } }) => (
-                            <Signature
-                              label={d_field.label}
-                              value={value}
-                              onChange={(e) => {
-                                onChange(e);
-                                setIsAllowSave(true);
-                              }}
-                              error={errors[d_field.field_name] && true}
-                            />
-                          )}
-                        />
-                        {errors[d_field.field_name] && (
+          return (
+            <View style={{}} key={i}>
+              <Text style={styles.sectionTitle}>{__(res.label)}</Text>
+              <View
+                style={[
+                  styles.card,
+                  isPadding
+                    ? {
+                        paddingHorizontal: res.padding,
+                        paddingVertical: res.padding,
+                      }
+                    : {},
+                ]}
+              >
+                {res.fields
+                  .filter((res) => !res.hidden)
+                  .map((d_field, index) => {
+                    if (d_field.type === "child_table") {
+                      return (
+                        <View key={index}>
+                          <Controller
+                            name={d_field.field_name}
+                            control={control}
+                            rules={
+                              d_field.required
+                                ? {
+                                    required: `${__(
+                                      d_field.label
+                                    )} là bắt buộc`,
+                                  }
+                                : undefined
+                            }
+                            render={({ field: { onChange, value } }) => (
+                              <DataTable
+                                style={{ marginTop: 10 }}
+                                fields={d_field.child_fields || []}
+                                label={d_field.label}
+                                value={value}
+                                onChange={(e) => {
+                                  onChange(e);
+                                  setIsAllowSave(true);
+                                }}
+                                error={!!errors[d_field.field_name]}
+                              />
+                            )}
+                          />
                           <HelperText type="error">
                             {(errors[d_field.field_name] as FieldError)
                               ?.message ?? ""}
                           </HelperText>
-                        )}
-                      </View>
-                    );
-                  } else if (d_field.type === "image") {
-                    return (
-                      <View
-                        key={d_field.field_name}
-                        style={{
-                          justifyContent: "center",
-                          alignItems: "center",
-                        }}
-                      >
-                        <Controller
-                          control={control}
-                          name={d_field.field_name}
-                          rules={
-                            d_field.required
-                              ? { required: `${__(d_field.label)} là bắt buộc` }
-                              : undefined
-                          }
-                          render={({ field: { onChange, value } }) => (
-                            <Image
-                              source={{ uri: FRAPPE_URL + value }}
-                              style={{
-                                width: 350,
-                                height: 350,
-                                borderRadius: 8,
-                                backgroundColor: "#f3f3f3",
-                              }}
-                              resizeMode="contain"
-                            />
-                          )}
-                        />
-                      </View>
-                    );
-                  } else if (
-                    !["child_table", "signature", "image"].includes(
-                      d_field.type
-                    )
-                  ) {
-                    return (
-                      <View key={index}>
-                        <Controller
-                          name={d_field.field_name}
-                          control={control}
-                          rules={
-                            d_field.required
-                              ? { required: `${__(d_field.label)} là bắt buộc` }
-                              : undefined
-                          }
-                          render={({ field: { onChange, value } }) => {
-                            return (
-                              <ProfileItem
-                                options={d_field.options}
-                                label={d_field.label}
-                                value={String(value ?? "")}
-                                onPress={() => {
-                                  if (d_field.readonly) return;
-                                  handleEditField(d_field, value, onChange);
-                                }}
-                              />
-                            );
-                          }}
-                        />
-                        {(errors[d_field.field_name] as FieldError)
-                          ?.message && (
-                          <HelperText type="error">
-                            {
-                              (errors[d_field.field_name] as FieldError)
-                                ?.message
+                        </View>
+                      );
+                    } else if (d_field.type === "signature") {
+                      return (
+                        <View key={d_field.field_name}>
+                          <Controller
+                            control={control}
+                            name={d_field.field_name}
+                            rules={
+                              d_field.required
+                                ? {
+                                    required: `${__(
+                                      d_field.label
+                                    )} là bắt buộc`,
+                                  }
+                                : undefined
                             }
-                          </HelperText>
-                        )}
-                      </View>
-                    );
-                  }
-                })}
+                            render={({ field: { onChange, value } }) => (
+                              <Signature
+                                label={d_field.label}
+                                value={value}
+                                onChange={(e) => {
+                                  onChange(e);
+                                  setIsAllowSave(true);
+                                }}
+                                error={errors[d_field.field_name] && true}
+                              />
+                            )}
+                          />
+                          {errors[d_field.field_name] && (
+                            <HelperText type="error">
+                              {(errors[d_field.field_name] as FieldError)
+                                ?.message ?? ""}
+                            </HelperText>
+                          )}
+                        </View>
+                      );
+                    } else if (d_field.type === "image") {
+                      return (
+                        <View
+                          key={d_field.field_name}
+                          style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Controller
+                            control={control}
+                            name={d_field.field_name}
+                            rules={
+                              d_field.required
+                                ? {
+                                    required: `${__(
+                                      d_field.label
+                                    )} là bắt buộc`,
+                                  }
+                                : undefined
+                            }
+                            render={({ field: { onChange, value } }) => (
+                              <Image
+                                source={{ uri: FRAPPE_URL + value }}
+                                style={{
+                                  width: 350,
+                                  height: 350,
+                                  borderRadius: 8,
+                                  backgroundColor: "#f3f3f3",
+                                }}
+                                resizeMode="contain"
+                              />
+                            )}
+                          />
+                        </View>
+                      );
+                    } else if (
+                      !["child_table", "signature", "image"].includes(
+                        d_field.type
+                      )
+                    ) {
+                      return (
+                        <View key={index}>
+                          <Controller
+                            name={d_field.field_name}
+                            control={control}
+                            rules={
+                              d_field.required
+                                ? {
+                                    required: `${__(
+                                      d_field.label
+                                    )} là bắt buộc`,
+                                  }
+                                : undefined
+                            }
+                            render={({ field: { onChange, value } }) => {
+                              return (
+                                <ProfileItem
+                                  options={d_field.options}
+                                  label={d_field.label}
+                                  value={String(value ?? "")}
+                                  onPress={() => {
+                                    if (d_field.readonly) return;
+                                    handleEditField(d_field, value, onChange);
+                                  }}
+                                />
+                              );
+                            }}
+                          />
+                          {(errors[d_field.field_name] as FieldError)
+                            ?.message && (
+                            <HelperText type="error">
+                              {
+                                (errors[d_field.field_name] as FieldError)
+                                  ?.message
+                              }
+                            </HelperText>
+                          )}
+                        </View>
+                      );
+                    }
+                  })}
+              </View>
             </View>
-          </View>
-        );
-      })}
+          );
+        })}
 
       {/* Edit Modal */}
       <Modal transparent visible={modalVisible} animationType="slide">

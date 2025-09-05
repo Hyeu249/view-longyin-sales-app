@@ -30,6 +30,7 @@ export type WithChildField = BaseField & {
 export type MainField = {
   label: string;
   padding?: number;
+  hidden?: boolean;
   fields: WithChildField[];
 };
 

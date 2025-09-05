@@ -138,6 +138,7 @@ export default function FormTab({
               doctype: "Company",
               type: "link",
               required: true,
+              hidden: true,
             },
             {
               label: "Stock Entry Type",

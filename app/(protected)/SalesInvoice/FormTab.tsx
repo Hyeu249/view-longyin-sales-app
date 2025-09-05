@@ -110,6 +110,7 @@ export default function FormTab({
               doctype: "Company",
               type: "link",
               required: true,
+              hidden: true,
             },
             {
               label: "Customer",
@@ -124,6 +125,7 @@ export default function FormTab({
               doctype: "Currency",
               type: "link",
               required: true,
+              hidden: true,
             },
             {
               label: "Outstanding Amount",

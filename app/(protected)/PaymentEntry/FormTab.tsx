@@ -112,6 +112,7 @@ export default function FormTab({
               doctype: "Company",
               type: "link",
               required: true,
+              hidden: true,
             },
             {
               label: "Mode of Payment",

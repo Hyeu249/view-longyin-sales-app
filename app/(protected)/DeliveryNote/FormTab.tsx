@@ -173,6 +173,7 @@ export default function FormTab({
               doctype: "Company",
               type: "link",
               required: true,
+              hidden: true,
             },
             {
               label: "Warehouse",
@@ -204,6 +205,7 @@ export default function FormTab({
         },
         {
           label: "Rate",
+          hidden: true,
           fields: [
             {
               label: "Currency",
