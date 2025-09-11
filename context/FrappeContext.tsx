@@ -32,6 +32,8 @@ interface FrappeContextType {
   setUserInfo: React.Dispatch<React.SetStateAction<Profile>>;
   userInfo: Profile;
 
+  notifications: any[];
+
   __: (txt: string, replace?: any, context?: string | null) => string;
   isTranslated: boolean;
 }
@@ -74,6 +76,7 @@ export const FrappeProvider: React.FC<FrappeProviderProps> = ({ children }) => {
 
   const [messages, setMessages] = useState<Record<string, string>>({});
   const [isTranslated, setIsTranslated] = useState<boolean>(false);
+  const [notifications, setNotifications] = useState<any>([]);
 
   const frappeApp = new FrappeApp(FRAPPE_URL);
   const db = frappeApp.db();
@@ -114,11 +117,12 @@ export const FrappeProvider: React.FC<FrappeProviderProps> = ({ children }) => {
     const res: any = await call.post(
       "frappe.desk.doctype.notification_log.notification_log.get_notification_logs",
       {
-        limit: 5,
+        limit: 20,
       }
     );
     const notifications = res?.message?.notification_logs;
     if (!notifications) return;
+    setNotifications(notifications);
     console.log("notifications: ", notifications);
   };
 
@@ -208,6 +212,7 @@ export const FrappeProvider: React.FC<FrappeProviderProps> = ({ children }) => {
         setUser,
         userInfo,
         setUserInfo,
+        notifications,
 
         __: translate,
         isTranslated,

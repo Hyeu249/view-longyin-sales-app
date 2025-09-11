@@ -6,6 +6,7 @@ import { useColorScheme } from "@/components/useColorScheme";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 import MiddleButton from "@/components/MiddleButton";
 import Profile from "@/components/Profile";
+import Notification from "@/components/Notification";
 import { useFrappe } from "@/context/FrappeContext";
 
 // You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
@@ -37,7 +38,12 @@ export default function TabLayout() {
           shadowRadius: 3, // iOS: bán kính bóng
         },
         headerTintColor: "#000", // màu text/icon
-        headerRight: () => <Profile size={38} />,
+        headerRight: () => (
+          <>
+            <Notification size={38} />
+            <Profile size={38} />
+          </>
+        ),
       }}
     >
       <Tabs.Screen
