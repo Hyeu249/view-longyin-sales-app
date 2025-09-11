@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
 import { useRouter } from "expo-router";
 import { useFrappe } from "@/context/FrappeContext";
@@ -52,7 +52,17 @@ function timeAgo(dateString: string) {
 
 export default function NotificationScreen() {
   const router = useRouter();
-  const { notifications } = useFrappe();
+  const { notifications, call } = useFrappe();
+
+  useEffect(() => {
+    const init = async () => {
+      const res: any = await call.post(
+        "frappe.desk.doctype.notification_log.notification_log.mark_all_as_read"
+      );
+      console.log("res: ", res);
+    };
+    init();
+  }, []);
 
   const renderItem = ({ item }: any) => {
     const displayName = item.from_user.split("@")[0];
@@ -87,7 +97,7 @@ export default function NotificationScreen() {
     <View style={styles.container}>
       <FlatList
         data={notifications}
-        keyExtractor={(item) => String(item.idx)}
+        keyExtractor={(item) => String(item.name)}
         renderItem={renderItem}
         contentContainerStyle={{ paddingVertical: 10 }}
       />
