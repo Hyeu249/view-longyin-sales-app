@@ -14,6 +14,7 @@ import {
   FrappeFileUpload,
 } from "frappe-js-sdk";
 export const FRAPPE_URL = "https://thanh.bhieu.com";
+import { initSocket } from "@/utils/socket";
 
 // Kiểu Auth
 interface Auth {
@@ -112,6 +113,9 @@ export const FrappeProvider: React.FC<FrappeProviderProps> = ({ children }) => {
   useEffect(() => {
     const init = async () => {
       await loadTranslations();
+      const socket = initSocket();
+
+      console.log("Socket.IO client initialized222222222:", socket);
     };
     if (user) init();
   }, [user]);
