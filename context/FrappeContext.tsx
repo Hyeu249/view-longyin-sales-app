@@ -110,9 +110,22 @@ export const FrappeProvider: React.FC<FrappeProviderProps> = ({ children }) => {
     init();
   }, []);
 
+  const get_notifications = async () => {
+    const res: any = await call.post(
+      "frappe.desk.doctype.notification_log.notification_log.get_notification_logs",
+      {
+        limit: 5,
+      }
+    );
+    const notifications = res?.message?.notification_logs;
+    if (!notifications) return;
+    console.log("notifications: ", notifications);
+  };
+
   useEffect(() => {
     const init = async () => {
       await loadTranslations();
+      await get_notifications();
       const socket = initSocket();
 
       console.log("Socket.IO client initialized222222222:", socket);

@@ -75,20 +75,33 @@ export default function Component() {
           doctype: "Purchase Receipt",
         });
 
+        const stock_value =
+          stockEntry?.message?.length == 0 ? [] : stockEntry?.message?.values;
+
+        const note_value =
+          deliveryNote?.message?.length == 0
+            ? []
+            : deliveryNote?.message?.values;
+
+        const receipt_value =
+          purchaseReceipt?.message?.length == 0
+            ? []
+            : purchaseReceipt?.message?.values;
+
         const sorted = [
-          ...stockEntry?.message?.values.map((res: any) => {
+          ...stock_value.map((res: any) => {
             res.push("university");
             res.push("StockEntry");
             return res;
           }),
           ,
-          ...deliveryNote?.message?.values.map((res: any) => {
+          ...note_value.map((res: any) => {
             res.push("truck");
             res.push("DeliveryNote");
             return res;
           }),
           ,
-          ...purchaseReceipt?.message?.values.map((res: any) => {
+          ...receipt_value.map((res: any) => {
             res.push("file");
             res.push("PurchaseReceipt");
             return res;
