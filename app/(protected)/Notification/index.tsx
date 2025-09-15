@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 import { useFrappe } from "@/context/FrappeContext";
 
@@ -68,27 +68,34 @@ export default function NotificationScreen() {
     const displayName = item.from_user.split("@")[0];
     const avatarLetter = displayName.charAt(0).toUpperCase();
     const time = timeAgo(item.creation);
+    const docPath = item.document_type.replace(" ", "");
 
     return (
       <View style={styles.card}>
-        <View style={styles.row}>
-          {/* Avatar */}
-          <View style={styles.avatar}>
-            <Text style={styles.avatarText}>{avatarLetter}</Text>
-          </View>
+        <Pressable
+          onPress={() =>
+            router.push(`/${docPath}/${item.document_name}` as any)
+          }
+        >
+          <View style={styles.row}>
+            {/* Avatar */}
+            <View style={styles.avatar}>
+              <Text style={styles.avatarText}>{avatarLetter}</Text>
+            </View>
 
-          {/* Nội dung */}
-          <View style={styles.textContainer}>
-            <Text style={styles.message}>
-              <Text style={styles.bold}>{item.subject}</Text>
-            </Text>
-            <Text style={styles.subMessage}>
-              {item.document_type}: {item.document_name}
-            </Text>
-            <Text style={styles.subMessage}>{item.email_content}</Text>
-            <Text style={styles.time}>{time}</Text>
+            {/* Nội dung */}
+            <View style={styles.textContainer}>
+              <Text style={styles.message}>
+                <Text style={styles.bold}>{item.subject}</Text>
+              </Text>
+              <Text style={styles.subMessage}>
+                {item.document_type}: {item.document_name}
+              </Text>
+              <Text style={styles.subMessage}>{item.email_content}</Text>
+              <Text style={styles.time}>{time}</Text>
+            </View>
           </View>
-        </View>
+        </Pressable>
       </View>
     );
   };
